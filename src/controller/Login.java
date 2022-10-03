@@ -9,24 +9,30 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Login implements Initializable {
     public TextField userName;
     public PasswordField password;
+    public Label userLocationLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("Login initialized");
+        ZoneId zone = ZoneId.systemDefault();
+        userLocationLabel.setText("Location: " + zone);
     }
 
     public void onLoginAction(ActionEvent actionEvent) throws SQLException, IOException {

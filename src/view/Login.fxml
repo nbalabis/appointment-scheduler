@@ -18,6 +18,7 @@
             <Label fx:id="passWord" text="Password:" />
             <PasswordField fx:id="password" />
             <Button mnemonicParsing="false" onAction="#onLoginAction" text="Log In" />
+            <Label fx:id="userLocationLabel" alignment="CENTER" />
          </children>
          <padding>
             <Insets bottom="100.0" left="100.0" right="100.0" top="100.0" />
