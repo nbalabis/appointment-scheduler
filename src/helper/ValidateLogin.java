@@ -9,8 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ValidateLogin {
-    //could this be non static?
-    public static void validate(String userName, String password, ActionEvent event) throws SQLException, IOException {
+    public static void validate(String userName, String password, ActionEvent event, String language) throws SQLException, IOException {
         String sql = "SELECT 1 FROM users WHERE User_Name = ? AND Password = ?;";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ps.setString(1, userName);
@@ -20,9 +19,14 @@ public class ValidateLogin {
             SceneSwitcher.toMain(event);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("User Not Found");
             alert.setHeaderText(null);
-            alert.setContentText("Invalid Username/Password. Please try again.");
+            if(language.equals("fr")) {
+                alert.setTitle("Utilisateur non trouvé");
+                alert.setContentText("Nom d'utilisateur/mot de passe invalide. Veuillez réessayer.");
+            } else {
+                alert.setTitle("User Not Found");
+                alert.setContentText("Invalid Username/Password. Please try again.");
+            }
             alert.showAndWait();
         }
     }

@@ -9,12 +9,21 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
+import java.util.Locale;
 
 public class Main extends Application {
+
     @Override
     public void start(Stage stage) throws Exception {
+//        Locale.setDefault(new Locale("fr"));
+        Locale location = Locale.getDefault();
+        String language = location.getLanguage();
         Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-        stage.setTitle("Login Form");
+        if(language.equals("fr")) {
+            stage.setTitle("Formulaire de Connexion");
+        } else {
+            stage.setTitle("Login Form");
+        }
         stage.setScene(new Scene(root, 800, 600));
         stage.show();
     }
@@ -22,12 +31,6 @@ public class Main extends Application {
     public static void main(String[] args) throws SQLException {
         JDBC.openConnection();
         launch(args);
-//        int rowsAffected = TestQuery.insert("NewUser", "badPassword");
-//        if(rowsAffected > 0){
-//            System.out.println("Insert successful!");
-//        } else {
-//            System.out.println("Insert failed :(");
-//        }
         JDBC.closeConnection();
     }
 }

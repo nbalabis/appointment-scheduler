@@ -13,11 +13,11 @@
    <children>
       <VBox alignment="CENTER" fillWidth="false" prefHeight="600.0" prefWidth="800.0" spacing="25.0">
          <children>
-            <Label text="Username:" />
+            <Label fx:id="usernameLabel" text="Username:" />
             <TextField fx:id="userName" />
-            <Label fx:id="passWord" text="Password:" />
+            <Label fx:id="passwordLabel" text="Password:" />
             <PasswordField fx:id="password" />
-            <Button mnemonicParsing="false" onAction="#onLoginAction" text="Log In" />
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onLoginAction" text="Log In" />
             <Label fx:id="userLocationLabel" alignment="CENTER" />
          </children>
          <padding>
