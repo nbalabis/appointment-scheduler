@@ -60,7 +60,8 @@ public class Customers implements Initializable {
         customersTable.setItems(obList);
     }
 
-    public void onAddCustomer(ActionEvent actionEvent) {
+    public void onAddCustomer(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toAddCustomer(actionEvent);
     }
 
     public void onEditCustomer(ActionEvent actionEvent) {

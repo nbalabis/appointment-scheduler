@@ -42,4 +42,14 @@ public class SceneSwitcher {
         stage.setScene(scene);
         stage.show();
     }
+
+    @FXML
+    public static void toAddCustomer(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/AddCustomer.fxml")));
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, 800, 600);
+        stage.setTitle("Add Customer");
+        stage.setScene(scene);
+        stage.show();
+    }
 }
