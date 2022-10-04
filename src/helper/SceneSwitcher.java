@@ -15,10 +15,10 @@ public class SceneSwitcher {
 
     @FXML
     static void toMain(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/FirstScreen.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/MainScreen.fxml")));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800, 600);
-        stage.setTitle("First Screen");
+        stage.setTitle("All Appointments");
         stage.setScene(scene);
         stage.show();
     }
