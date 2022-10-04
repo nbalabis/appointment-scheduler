@@ -16,7 +16,7 @@ public class ValidateLogin {
         ps.setString(2, password);
         ResultSet result =  ps.executeQuery();
         if(result.next()) {
-            SceneSwitcher.toMain(event);
+            SceneSwitcher.toAppts(event);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);

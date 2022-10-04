@@ -1,6 +1,7 @@
 package controller;
 
 import helper.JDBC;
+import helper.SceneSwitcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,13 +12,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.AppointmentsTable;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class MainScreen implements Initializable {
+public class Appointments implements Initializable {
     public TableView<model.AppointmentsTable> appointmentsTable;
     public TableColumn<model.AppointmentsTable, Integer> col_apptID;
     public TableColumn<model.AppointmentsTable, String> col_title;
@@ -80,6 +82,11 @@ public class MainScreen implements Initializable {
     public void onDeleteAppt(ActionEvent actionEvent) {
     }
 
-    public void onLogout(ActionEvent actionEvent) {
+    public void onLogout(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toLogin(actionEvent);
+    }
+
+    public void onSwitchToCustomer(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toCustomers(actionEvent);
     }
 }
