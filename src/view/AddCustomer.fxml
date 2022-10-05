@@ -65,7 +65,7 @@
                      </GridPane.margin>
                   </Label>
                   <ChoiceBox fx:id="countryPicker" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <ChoiceBox fx:id="divisionPicker" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <ChoiceBox fx:id="divisionPicker" disable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />

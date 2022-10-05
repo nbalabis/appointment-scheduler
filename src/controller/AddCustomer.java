@@ -91,6 +91,7 @@ public class AddCustomer implements Initializable {
                 }
 
                 divisionPicker.setItems(divisionList);
+                divisionPicker.setDisable(false);
             }
         });
     }

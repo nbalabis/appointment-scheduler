@@ -26,7 +26,7 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#onAddCustomer" text="New Customer" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#onEditCustomer" text="Edit Customer" />
+                  <Button fx:id="editCustomerButton" disable="true" mnemonicParsing="false" onAction="#onEditCustomer" text="Edit Customer" />
                   <Button mnemonicParsing="false" onAction="#onDeleteCustomer" text="Delete Customer" />
                </children>
             </HBox>

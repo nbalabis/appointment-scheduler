@@ -2,10 +2,13 @@ package controller;
 
 import helper.JDBC;
 import helper.SceneSwitcher;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -27,6 +30,7 @@ public class Customers implements Initializable {
     public TableColumn<CustomersTable, String> col_postalCode;
     public TableColumn<CustomersTable, String> col_phone;
     public TableColumn<CustomersTable, Integer> col_divisionID;
+    public Button editCustomerButton;
 
     ObservableList<CustomersTable> obList = FXCollections.observableArrayList();
 
@@ -59,13 +63,23 @@ public class Customers implements Initializable {
         col_divisionID.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
 
         customersTable.setItems(obList);
+
+        customersTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<CustomersTable>() {
+            @Override
+            public void changed(ObservableValue<? extends CustomersTable> observableValue, CustomersTable customersTable, CustomersTable t1) {
+                editCustomerButton.setDisable(false);
+            }
+        });
     }
 
     public void onAddCustomer(ActionEvent actionEvent) throws IOException {
         SceneSwitcher.toAddCustomer(actionEvent);
     }
 
-    public void onEditCustomer(ActionEvent actionEvent) {
+    public void onEditCustomer(ActionEvent actionEvent) throws IOException, SQLException {
+        CustomersTable selectedCustomer = customersTable.getSelectionModel().getSelectedItem();
+        Integer customerID = selectedCustomer.getCustomerID();
+        SceneSwitcher.toEditCustomer(actionEvent, customerID);
     }
 
     public void onDeleteCustomer(ActionEvent actionEvent) {
