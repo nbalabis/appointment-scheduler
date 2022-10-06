@@ -9,11 +9,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.CustomersTable;
+import view.CustomerDeletePopup;
 
 import java.io.IOException;
 import java.net.URL;
@@ -37,6 +37,48 @@ public class Customers implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        setCustomerTable();
+
+        customersTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<CustomersTable>() {
+            @Override
+            public void changed(ObservableValue<? extends CustomersTable> observableValue, CustomersTable customersTable, CustomersTable t1) {
+                editCustomerButton.setDisable(false);
+            }
+        });
+    }
+
+    public void onAddCustomer(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toAddCustomer(actionEvent);
+    }
+
+    public void onEditCustomer(ActionEvent actionEvent) throws IOException, SQLException {
+        CustomersTable selectedCustomer = customersTable.getSelectionModel().getSelectedItem();
+        Integer customerID = selectedCustomer.getCustomerID();
+        SceneSwitcher.toEditCustomer(actionEvent, customerID);
+    }
+
+    public void onDeleteCustomer(ActionEvent actionEvent) {
+        //get selected customer
+        CustomersTable selectedCustomer = customersTable.getSelectionModel().getSelectedItem();
+        Integer customerID = selectedCustomer.getCustomerID();
+
+        //display confirmation prompt
+        CustomerDeletePopup.display(customerID);
+
+        //refresh customer table
+        setCustomerTable();
+    }
+
+    public void onLogout(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toLogin(actionEvent);
+    }
+
+    public void onSwitchToAppt(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toAppts(actionEvent);
+    }
+
+    private void setCustomerTable() {
+        customersTable.getItems().clear();
         String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers;";
         try {
             PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -63,33 +105,5 @@ public class Customers implements Initializable {
         col_divisionID.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
 
         customersTable.setItems(obList);
-
-        customersTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<CustomersTable>() {
-            @Override
-            public void changed(ObservableValue<? extends CustomersTable> observableValue, CustomersTable customersTable, CustomersTable t1) {
-                editCustomerButton.setDisable(false);
-            }
-        });
-    }
-
-    public void onAddCustomer(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toAddCustomer(actionEvent);
-    }
-
-    public void onEditCustomer(ActionEvent actionEvent) throws IOException, SQLException {
-        CustomersTable selectedCustomer = customersTable.getSelectionModel().getSelectedItem();
-        Integer customerID = selectedCustomer.getCustomerID();
-        SceneSwitcher.toEditCustomer(actionEvent, customerID);
-    }
-
-    public void onDeleteCustomer(ActionEvent actionEvent) {
-    }
-
-    public void onLogout(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toLogin(actionEvent);
-    }
-
-    public void onSwitchToAppt(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toAppts(actionEvent);
     }
 }
