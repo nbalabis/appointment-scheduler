@@ -26,8 +26,34 @@ public class EditCustomer implements Initializable {
     public ChoiceBox<String> countryPicker;
     public ChoiceBox<String> divisionPicker;
     public TextField customerIDInput;
+    private int customerID;
 
-    public void onUpdateCustomer(ActionEvent actionEvent) {
+    public void onUpdateCustomer(ActionEvent actionEvent) throws SQLException, IOException {
+        String customerName = customerNameInput.getText();
+        String address = addressInput.getText();
+        String postalCode = postalCodeInput.getText();
+        String phone = phoneInput.getText();
+        Integer divisionID = getDivisionID(divisionPicker.getValue());
+
+        String sql = "UPDATE customers SET Customer_name = ?, Address = ?, Postal_Code = ?, Phone = ?, Division_ID = ? WHERE Customer_ID = ?;";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setString(1, customerName);
+        ps.setString(2, address);
+        ps.setString(3, postalCode);
+        ps.setString(4, phone);
+        ps.setInt(5, divisionID);
+        ps.setInt(6, customerID);
+        ps.executeUpdate();
+
+        SceneSwitcher.toCustomers(actionEvent);
+    }
+
+    public Integer getDivisionID(String division) throws SQLException {
+        String sql = "SELECT Division_ID FROM first_level_divisions WHERE Division = \"" + division + "\";";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet result = ps.executeQuery();
+        result.next();
+        return result.getInt("Division_ID");
     }
 
     public void onCancel(ActionEvent actionEvent) throws IOException {
@@ -60,6 +86,7 @@ public class EditCustomer implements Initializable {
                 break;
         }
         divisionPicker.getSelectionModel().select(result.getString("Division"));
+        this.customerID = result.getInt("Customer_ID");
     }
 
     @Override
