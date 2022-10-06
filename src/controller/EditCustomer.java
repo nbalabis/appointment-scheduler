@@ -2,6 +2,8 @@ package controller;
 
 import helper.JDBC;
 import helper.SceneSwitcher;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,7 +24,7 @@ public class EditCustomer implements Initializable {
     public TextField postalCodeInput;
     public TextField phoneInput;
     public ChoiceBox<String> countryPicker;
-    public ChoiceBox divisionPicker;
+    public ChoiceBox<String> divisionPicker;
     public TextField customerIDInput;
 
     public void onUpdateCustomer(ActionEvent actionEvent) {
@@ -46,7 +48,18 @@ public class EditCustomer implements Initializable {
         addressInput.setText(result.getString("Address"));
         postalCodeInput.setText(result.getString("Postal_Code"));
         phoneInput.setText(result.getString("Phone"));
-        countryPicker.getSelectionModel().select(result.getString("Country"));
+        switch (result.getString("Country")) {
+            case "U.S":
+                countryPicker.getSelectionModel().select("United States");
+                break;
+            case "UK":
+                countryPicker.getSelectionModel().select("United Kingdom");
+                break;
+            case "Canada":
+                countryPicker.getSelectionModel().select("Canada");
+                break;
+        }
+        divisionPicker.getSelectionModel().select(result.getString("Division"));
     }
 
     @Override
@@ -54,6 +67,39 @@ public class EditCustomer implements Initializable {
         ObservableList<String> countryList = FXCollections.observableArrayList("Canada", "United Kingdom", "United States");
         countryPicker.setItems(countryList);
 
+        countryPicker.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                String countryChoice = countryPicker.getItems().get((Integer) t1);
+                Integer countryID = null;
+                switch (countryChoice) {
+                    case "United States":
+                        countryID = 1;
+                        break;
+                    case "United Kingdom":
+                        countryID = 2;
+                        break;
+                    case "Canada":
+                        countryID = 3;
+                        break;
+                }
+
+                String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = " + countryID;
+                ObservableList<String> divisionList = FXCollections.observableArrayList();
+                try {
+                    PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                    ResultSet result = ps.executeQuery();
+                    while (result.next()) {
+                        divisionList.add(result.getString("Division"));
+                    }
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+
+                divisionPicker.setItems(divisionList);
+                divisionPicker.setDisable(false);
+            }
+        });
     }
 }
 
