@@ -73,7 +73,9 @@ public class Appointments implements Initializable {
         appointmentsTable.setItems(oblist);
     }
 
-    public void onAddAppt(ActionEvent actionEvent) {
+    public void onAddAppt(ActionEvent actionEvent) throws IOException {
+        //switch to Add Appt Form
+        SceneSwitcher.toAddApptForm(actionEvent);
     }
 
     public void onEditAppt(ActionEvent actionEvent) {
