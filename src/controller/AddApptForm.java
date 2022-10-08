@@ -57,7 +57,7 @@ public class AddApptForm implements Initializable {
         }
     }
 
-    public void onCreateNewAppt(ActionEvent actionEvent) throws IOException {
+    public void onCreateNewAppt(ActionEvent actionEvent) throws IOException, SQLException {
         //collect all input values
         String title = titleInput.getText();
         String description = descriptionInput.getText();
