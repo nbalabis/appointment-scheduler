@@ -2,15 +2,19 @@ package controller;
 
 import helper.JDBC;
 import helper.SceneSwitcher;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.AppointmentsTable;
+import model.CustomersTable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,6 +35,7 @@ public class Appointments implements Initializable {
     public TableColumn<model.AppointmentsTable, Integer> col_customerID;
     public TableColumn<model.AppointmentsTable, Integer> col_userID;
     public TableColumn<model.AppointmentsTable, Integer> col_contactID;
+    public Button editApptButton;
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
 
@@ -71,6 +76,14 @@ public class Appointments implements Initializable {
         col_contactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
 
         appointmentsTable.setItems(oblist);
+
+        //enable editApptButton when an appt is selected
+        appointmentsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AppointmentsTable>() {
+            @Override
+            public void changed(ObservableValue<? extends AppointmentsTable> observableValue, AppointmentsTable appointmentsTable, AppointmentsTable t1) {
+                editApptButton.setDisable(false);
+            }
+        });
     }
 
     public void onAddAppt(ActionEvent actionEvent) throws IOException {
@@ -78,7 +91,13 @@ public class Appointments implements Initializable {
         SceneSwitcher.toAddApptForm(actionEvent);
     }
 
-    public void onEditAppt(ActionEvent actionEvent) {
+    public void onEditAppt(ActionEvent actionEvent) throws SQLException, IOException {
+        //get selected appt
+        AppointmentsTable selectedAppt = appointmentsTable.getSelectionModel().getSelectedItem();
+        Integer apptID = selectedAppt.getApptID();
+
+        //switch to appt editing screen and pass appt ID
+        SceneSwitcher.toEditAppt(actionEvent, apptID);
     }
 
     public void onDeleteAppt(ActionEvent actionEvent) {

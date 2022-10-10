@@ -1,5 +1,6 @@
 package helper;
 
+import controller.EditApptForm;
 import controller.EditCustomer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -76,6 +77,23 @@ public class SceneSwitcher {
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Add Customer");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public static void toEditAppt(ActionEvent actionEvent, Integer apptID) throws IOException, SQLException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/EditApptForm.fxml")));
+        Parent root = loader.load();
+
+        //pass appt ID to controller
+        EditApptForm controller = loader.getController();
+        controller.setApptData(apptID);
+
+        //show stage
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, 800, 600);
+        stage.setTitle("Edit Appointment");
         stage.setScene(scene);
         stage.show();
     }

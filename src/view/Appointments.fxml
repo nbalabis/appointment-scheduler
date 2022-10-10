@@ -30,7 +30,7 @@
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#onAddAppt" text="New Appointment" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#onEditAppt" text="Edit Appointment" />
+                  <Button fx:id="editApptButton" disable="true" mnemonicParsing="false" onAction="#onEditAppt" text="Edit Appointment" />
                   <Button mnemonicParsing="false" onAction="#onDeleteAppt" text="Delete Appointment" />
                </children>
             </HBox>
