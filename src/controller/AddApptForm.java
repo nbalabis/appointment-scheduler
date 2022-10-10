@@ -1,6 +1,7 @@
 package controller;
 
 import helper.SceneSwitcher;
+import helper.TimePicker;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -33,19 +34,10 @@ public class AddApptForm implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set time pickers
-        SpinnerValueFactory<Integer> startHourFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,23);
-        startHourFactory.setValue(0);
-        SpinnerValueFactory<Integer> startMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,60);
-        startMinuteFactory.setValue(0);
-        startHourPicker.setValueFactory(startHourFactory);
-        startMinutePicker.setValueFactory(startMinuteFactory);
-
-        SpinnerValueFactory<Integer> endHourFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,23);
-        endHourFactory.setValue(0);
-        SpinnerValueFactory<Integer> endMinuteFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0,60);
-        endMinuteFactory.setValue(0);
-        endHourPicker.setValueFactory(endHourFactory);
-        endMinutePicker.setValueFactory(endMinuteFactory);
+        startHourPicker.setValueFactory(TimePicker.setHours());
+        startMinutePicker.setValueFactory(TimePicker.setMinutes());
+        endHourPicker.setValueFactory(TimePicker.setHours());
+        endMinutePicker.setValueFactory(TimePicker.setMinutes());
 
         //set contact, customer, and user IDs
         try {
