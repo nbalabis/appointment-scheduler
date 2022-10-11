@@ -126,7 +126,7 @@
                         <Insets />
                     </VBox.margin>
                     <children>
-                        <Button mnemonicParsing="false" onAction="#onSaveAppt" text="Save" />
+                        <Button mnemonicParsing="false" onAction="#onUpdateAppt" text="Save" />
                         <Button layoutX="284.0" layoutY="48.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
                     </children>
                     <padding>

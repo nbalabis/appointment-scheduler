@@ -4,7 +4,7 @@ public class AppointmentsTable {
     String title, description, location, type, start, end;
     Integer apptID, customerID, userID, contactID;
 
-    public AppointmentsTable(String title, String description, String location, String type, String start, String end, Integer apptID, Integer userID, Integer customerID, Integer contactID){
+    public AppointmentsTable(String title, String description, String location, String type, String start, String end, Integer apptID, Integer customerID, Integer userID, Integer contactID){
         this.apptID = apptID;
         this.title = title;
         this.description = description;
