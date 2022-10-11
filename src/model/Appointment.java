@@ -35,7 +35,6 @@ public class Appointment {
 
         //update data in database
         String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Contact_ID = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = ?;";
-//        String sql = "UPDATE appointments SET Start = ? WHERE Appointment_ID = ?;";
 
         PreparedStatement ps = JDBC.connection. prepareStatement(sql);
         ps.setString(1, title);
