@@ -35,7 +35,6 @@ public class Appointment {
 
         //update data in database
         String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Contact_ID = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = ?;";
-
         PreparedStatement ps = JDBC.connection. prepareStatement(sql);
         ps.setString(1, title);
         ps.setString(2, description);
@@ -47,6 +46,14 @@ public class Appointment {
         ps.setInt(8, customerID);
         ps.setInt(9, userID);
         ps.setInt(10, apptID);
+        ps.executeUpdate();
+    }
+
+    public static void delete(Integer apptID) throws SQLException {
+        //find and delete appt from database
+        String sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setInt(1, apptID);
         ps.executeUpdate();
     }
 }

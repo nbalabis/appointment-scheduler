@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import model.Appointment;
 import model.AppointmentsTable;
 import model.CustomersTable;
 
@@ -41,7 +42,52 @@ public class Appointments implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //set Appointment table initially
+        setApptTable();
 
+        //enable editApptButton when an appt is selected
+        appointmentsTable.getSelectionModel().selectedItemProperty().addListener((observableValue, appointmentsTable, t1) -> editApptButton.setDisable(false));
+    }
+
+    public void onAddAppt(ActionEvent actionEvent) throws IOException {
+        //switch to Add Appt Form
+        SceneSwitcher.toAddApptForm(actionEvent);
+    }
+
+    public void onEditAppt(ActionEvent actionEvent) throws SQLException, IOException {
+        //get selected appt
+        AppointmentsTable selectedAppt = appointmentsTable.getSelectionModel().getSelectedItem();
+        Integer apptID = selectedAppt.getApptID();
+
+        //switch to appt editing screen and pass appt ID
+        SceneSwitcher.toEditAppt(actionEvent, apptID);
+    }
+
+    public void onDeleteAppt(ActionEvent actionEvent) throws SQLException {
+        //get selected appt
+        AppointmentsTable selectedAppt = appointmentsTable.getSelectionModel().getSelectedItem();
+        Integer apptID = selectedAppt.getApptID();
+
+        //delete from database
+        Appointment.delete(apptID);
+
+        //refresh table
+        setApptTable();
+    }
+
+    public void onLogout(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toLogin(actionEvent);
+    }
+
+    public void onSwitchToCustomer(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toCustomers(actionEvent);
+    }
+
+    public void setApptTable(){
+        //clear out anything in table
+        appointmentsTable.getItems().clear();
+
+        //set table with database data
         String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
         try {
             PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -58,7 +104,7 @@ public class Appointments implements Initializable {
                         result.getInt("Customer_ID"),
                         result.getInt("User_ID"),
                         result.getInt("Contact_ID")
-                        ));
+                ));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -76,38 +122,5 @@ public class Appointments implements Initializable {
         col_contactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
 
         appointmentsTable.setItems(oblist);
-
-        //enable editApptButton when an appt is selected
-        appointmentsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AppointmentsTable>() {
-            @Override
-            public void changed(ObservableValue<? extends AppointmentsTable> observableValue, AppointmentsTable appointmentsTable, AppointmentsTable t1) {
-                editApptButton.setDisable(false);
-            }
-        });
-    }
-
-    public void onAddAppt(ActionEvent actionEvent) throws IOException {
-        //switch to Add Appt Form
-        SceneSwitcher.toAddApptForm(actionEvent);
-    }
-
-    public void onEditAppt(ActionEvent actionEvent) throws SQLException, IOException {
-        //get selected appt
-        AppointmentsTable selectedAppt = appointmentsTable.getSelectionModel().getSelectedItem();
-        Integer apptID = selectedAppt.getApptID();
-
-        //switch to appt editing screen and pass appt ID
-        SceneSwitcher.toEditAppt(actionEvent, apptID);
-    }
-
-    public void onDeleteAppt(ActionEvent actionEvent) {
-    }
-
-    public void onLogout(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toLogin(actionEvent);
-    }
-
-    public void onSwitchToCustomer(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toCustomers(actionEvent);
     }
 }
