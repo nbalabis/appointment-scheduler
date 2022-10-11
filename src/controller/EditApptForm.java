@@ -66,16 +66,15 @@ public class EditApptForm implements Initializable {
         descriptionInput.setText(result.getString("Description"));
         locationInput.setText(result.getString("Location"));
         typeInput.setText(result.getString("Type"));
-        contactIDPicker.getSelectionModel().select(result.getInt("Contact_ID"));
+        contactIDPicker.getSelectionModel().select(Integer.valueOf(result.getString("Contact_ID")));
         startDateSelector.setValue(formatDate(result.getString("Start").substring(0,10)));
         startHourPicker.getValueFactory().setValue(Integer.valueOf(result.getString("Start").substring(11,13)));
         startMinutePicker.getValueFactory().setValue(Integer.valueOf(result.getString("Start").substring(14,16)));
         endDateSelector.setValue(formatDate(result.getString("End").substring(0,10)));
         endHourPicker.getValueFactory().setValue(Integer.valueOf(result.getString("End").substring(11,13)));
         endMinutePicker.getValueFactory().setValue(Integer.valueOf(result.getString("End").substring(14,16)));
-        customerIDPicker.getSelectionModel().select(result.getInt("Customer_ID"));
-        userIDPicker.getSelectionModel().select(result.getInt("User_ID"));
-        System.out.println(userIDPicker.getValue());
+        customerIDPicker.getSelectionModel().select(Integer.valueOf(result.getString("Customer_ID")));
+        userIDPicker.getSelectionModel().select(Integer.valueOf(result.getString("User_ID")));
     }
 
     public void onUpdateAppt(ActionEvent actionEvent) throws SQLException, IOException {
