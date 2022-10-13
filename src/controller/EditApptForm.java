@@ -16,6 +16,7 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -77,7 +78,7 @@ public class EditApptForm implements Initializable {
         userIDPicker.getSelectionModel().select(Integer.valueOf(result.getString("User_ID")));
     }
 
-    public void onUpdateAppt(ActionEvent actionEvent) throws SQLException, IOException {
+    public void onUpdateAppt(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
         //collect all input values
         Integer apptID = Integer.valueOf(apptIDInput.getText());
         String title = titleInput.getText();

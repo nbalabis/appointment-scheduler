@@ -13,6 +13,7 @@ import model.User;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -49,7 +50,7 @@ public class AddApptForm implements Initializable {
         }
     }
 
-    public void onCreateNewAppt(ActionEvent actionEvent) throws IOException, SQLException {
+    public void onCreateNewAppt(ActionEvent actionEvent) throws IOException, SQLException, ParseException {
         //collect all input values
         String title = titleInput.getText();
         String description = descriptionInput.getText();
