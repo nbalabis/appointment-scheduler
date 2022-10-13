@@ -8,20 +8,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
 import model.AppointmentsTable;
-import model.CustomersTable;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class Appointments implements Initializable {
@@ -37,16 +34,42 @@ public class Appointments implements Initializable {
     public TableColumn<model.AppointmentsTable, Integer> col_userID;
     public TableColumn<model.AppointmentsTable, Integer> col_contactID;
     public Button editApptButton;
+    public RadioButton monthlyViewRadioBtn;
+    public RadioButton weeklyViewRadioBtn;
+    public RadioButton allViewRadioBtn;
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set Appointment table initially
-        setApptTable();
+        setAptTableAll();
 
         //enable editApptButton when an appt is selected
         appointmentsTable.getSelectionModel().selectedItemProperty().addListener((observableValue, appointmentsTable, t1) -> editApptButton.setDisable(false));
+
+        //set up radio btn group
+        final ToggleGroup aptViewGroup = new ToggleGroup();
+        monthlyViewRadioBtn.setToggleGroup(aptViewGroup);
+        weeklyViewRadioBtn.setToggleGroup(aptViewGroup);
+        allViewRadioBtn.setToggleGroup(aptViewGroup);
+        allViewRadioBtn.setSelected(true);
+
+        //create radio btn group listener
+        aptViewGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
+            RadioButton selected = (RadioButton) aptViewGroup.getSelectedToggle();
+            switch (selected.getId()) {
+                case "monthlyViewRadioBtn":
+                    setAptTableMonthly();
+                    break;
+                case "weeklyViewRadioBtn":
+                    setAptTableWeekly();
+                    break;
+                case "allViewRadioBtn":
+                    setAptTableAll();
+                    break;
+            }
+        });
     }
 
     public void onAddAppt(ActionEvent actionEvent) throws IOException {
@@ -72,7 +95,7 @@ public class Appointments implements Initializable {
         Appointment.delete(apptID);
 
         //refresh table
-        setApptTable();
+        setAptTableAll();
     }
 
     public void onLogout(ActionEvent actionEvent) throws IOException {
@@ -83,7 +106,7 @@ public class Appointments implements Initializable {
         SceneSwitcher.toCustomers(actionEvent);
     }
 
-    public void setApptTable(){
+    public void setAptTableAll(){
         //clear out anything in table
         appointmentsTable.getItems().clear();
 
@@ -92,24 +115,77 @@ public class Appointments implements Initializable {
         try {
             PreparedStatement ps = JDBC.connection.prepareStatement(sql);
             ResultSet result =  ps.executeQuery();
-            while(result.next()) {
-                oblist.add(new AppointmentsTable(
-                        result.getString("Title"),
-                        result.getString("Description"),
-                        result.getString("Location"),
-                        result.getString("Type"),
-                        result.getString("Start"),
-                        result.getString("End"),
-                        result.getInt("Appointment_ID"),
-                        result.getInt("Customer_ID"),
-                        result.getInt("User_ID"),
-                        result.getInt("Contact_ID")
-                ));
-            }
+            addToObList(result);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
+        setCellValueFactories();
+        appointmentsTable.setItems(oblist);
+    }
+
+    public void setAptTableMonthly(){
+        //clear out anything in table
+        appointmentsTable.getItems().clear();
+        int currentYear = LocalDate.now().getYear();
+        int currentMonth = LocalDate.now().getMonthValue();
+
+        //set table with database data
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE YEAR(Start) = ? AND MONTH(Start) = ?;";
+        try {
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+            ps.setInt(1, currentYear);
+            ps.setInt(2, currentMonth);
+            ResultSet result =  ps.executeQuery();
+            addToObList(result);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        setCellValueFactories();
+        appointmentsTable.setItems(oblist);
+    }
+
+    public void setAptTableWeekly(){
+        //clear out anything in table
+        appointmentsTable.getItems().clear();
+        LocalDate currentDate = LocalDate.now();
+        LocalDate oneWeekDate = LocalDate.now().plusWeeks(1);
+
+        //set table with database data
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE Start BETWEEN ? AND ?;";
+        try {
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+            ps.setString(1, String.valueOf(currentDate));
+            ps.setString(2, String.valueOf(oneWeekDate));
+            ResultSet result =  ps.executeQuery();
+            addToObList(result);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        setCellValueFactories();
+        appointmentsTable.setItems(oblist);
+    }
+
+    private void addToObList(ResultSet result) throws SQLException {
+        while(result.next()) {
+            oblist.add(new AppointmentsTable(
+                    result.getString("Title"),
+                    result.getString("Description"),
+                    result.getString("Location"),
+                    result.getString("Type"),
+                    result.getString("Start"),
+                    result.getString("End"),
+                    result.getInt("Appointment_ID"),
+                    result.getInt("Customer_ID"),
+                    result.getInt("User_ID"),
+                    result.getInt("Contact_ID")
+            ));
+        }
+    }
+
+    private void setCellValueFactories() {
         col_apptID.setCellValueFactory(new PropertyValueFactory<>("apptID"));
         col_title.setCellValueFactory(new PropertyValueFactory<>("title"));
         col_description.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -120,7 +196,5 @@ public class Appointments implements Initializable {
         col_customerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         col_userID.setCellValueFactory(new PropertyValueFactory<>("userID"));
         col_contactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
-
-        appointmentsTable.setItems(oblist);
     }
 }
