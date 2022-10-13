@@ -1,17 +1,15 @@
 package model;
 
 import helper.JDBC;
-import helper.SceneSwitcher;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
 import static helper.TimeConversion.convertToDate;
-import static helper.TimeConversion.toUTC;
+import static helper.TimeConversion.localToUTC;
 
 public class Appointment {
     public static void add(String title, String description, String location, String type, Integer contactID, LocalDate startDate, Integer startHour, Integer startMinute, LocalDate endDate, Integer endHour, Integer endMinute, Integer customerID, Integer userID) throws SQLException, ParseException {
@@ -20,8 +18,8 @@ public class Appointment {
         Date end = convertToDate(endDate, endHour, endMinute);
 
         //convert date to UTC
-        String startUTC = toUTC(start);
-        String endUTC = toUTC(end);
+        String startUTC = localToUTC(start);
+        String endUTC = localToUTC(end);
 
         //insert data into database
         String sql = "INSERT INTO appointments (Title, Description, Location, Type, Contact_ID, Start, End, Customer_ID, User_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -44,8 +42,8 @@ public class Appointment {
         Date end = convertToDate(endDate, endHour, endMinute);
 
         //convert date to UTC
-        String startUTC = toUTC(start);
-        String endUTC = toUTC(end);
+        String startUTC = localToUTC(start);
+        String endUTC = localToUTC(end);
 
         //update data in database
         String sql = "UPDATE appointments SET Title = ?, Description = ?, Location = ?, Type = ?, Contact_ID = ?, Start = ?, End = ?, Customer_ID = ?, User_ID = ? WHERE Appointment_ID = ?;";

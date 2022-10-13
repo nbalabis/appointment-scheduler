@@ -18,8 +18,12 @@ import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+
+import static helper.TimeConversion.UTCToLocal;
 
 public class Appointments implements Initializable {
     public TableView<model.AppointmentsTable> appointmentsTable;
@@ -116,7 +120,7 @@ public class Appointments implements Initializable {
             PreparedStatement ps = JDBC.connection.prepareStatement(sql);
             ResultSet result =  ps.executeQuery();
             addToObList(result);
-        } catch (SQLException throwables) {
+        } catch (SQLException | ParseException throwables) {
             throwables.printStackTrace();
         }
 
@@ -138,7 +142,7 @@ public class Appointments implements Initializable {
             ps.setInt(2, currentMonth);
             ResultSet result =  ps.executeQuery();
             addToObList(result);
-        } catch (SQLException throwables) {
+        } catch (SQLException | ParseException throwables) {
             throwables.printStackTrace();
         }
 
@@ -160,7 +164,7 @@ public class Appointments implements Initializable {
             ps.setString(2, String.valueOf(oneWeekDate));
             ResultSet result =  ps.executeQuery();
             addToObList(result);
-        } catch (SQLException throwables) {
+        } catch (SQLException | ParseException throwables) {
             throwables.printStackTrace();
         }
 
@@ -168,15 +172,18 @@ public class Appointments implements Initializable {
         appointmentsTable.setItems(oblist);
     }
 
-    private void addToObList(ResultSet result) throws SQLException {
+    private void addToObList(ResultSet result) throws SQLException, ParseException {
+        //convert dates from UTC to Local
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
         while(result.next()) {
             oblist.add(new AppointmentsTable(
                     result.getString("Title"),
                     result.getString("Description"),
                     result.getString("Location"),
                     result.getString("Type"),
-                    result.getString("Start"),
-                    result.getString("End"),
+                    UTCToLocal(dateFormat.parse(result.getString("Start"))),
+                    UTCToLocal(dateFormat.parse(result.getString("End"))),
                     result.getInt("Appointment_ID"),
                     result.getInt("Customer_ID"),
                     result.getInt("User_ID"),

@@ -22,8 +22,13 @@ public class TimeConversion {
         return  dateFormat.parse(dateString);
     }
 
-    public static String toUTC(Date date) {
+    public static String localToUTC(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return dateFormat.format(new Date(date.getTime() - Calendar.getInstance().getTimeZone().getOffset(date.getTime())));
+    }
+
+    public static String UTCToLocal(Date date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        return dateFormat.format(new Date(date.getTime() + Calendar.getInstance().getTimeZone().getOffset(new Date().getTime())));
     }
 }
