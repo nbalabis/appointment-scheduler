@@ -81,7 +81,7 @@ public class Appointments implements Initializable {
         SceneSwitcher.toAddApptForm(actionEvent);
     }
 
-    public void onEditAppt(ActionEvent actionEvent) throws SQLException, IOException {
+    public void onEditAppt(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
         //get selected appt
         AppointmentsTable selectedAppt = appointmentsTable.getSelectionModel().getSelectedItem();
         Integer apptID = selectedAppt.getApptID();

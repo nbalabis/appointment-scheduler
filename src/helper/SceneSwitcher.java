@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Objects;
 
 public class SceneSwitcher {
@@ -82,7 +83,7 @@ public class SceneSwitcher {
     }
 
     @FXML
-    public static void toEditAppt(ActionEvent actionEvent, Integer apptID) throws IOException, SQLException {
+    public static void toEditAppt(ActionEvent actionEvent, Integer apptID) throws IOException, SQLException, ParseException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/EditApptForm.fxml")));
         Parent root = loader.load();
 
