@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static helper.TimeConversion.*;
+import static helper.Validate.hasCustomerOverlap;
+import static helper.Validate.isOutsideBusinessHours;
 
 public class Appointment {
     public static boolean add(String title, String description, String location, String type, Integer contactID, LocalDate startDate, Integer startHour, Integer startMinute, LocalDate endDate, Integer endHour, Integer endMinute, Integer customerID, Integer userID) throws SQLException, ParseException {
@@ -21,7 +23,7 @@ public class Appointment {
         Date end = convertToDate(endDate, endHour, endMinute);
 
         //exit function early if doesn't pass validation
-        if(isOutsideBusinessHours(start, end)) {
+        if(isOutsideBusinessHours(start, end) || hasCustomerOverlap(customerID, start, end)) {
             return false;
         }
 
@@ -52,7 +54,7 @@ public class Appointment {
         Date end = convertToDate(endDate, endHour, endMinute);
 
         //exit function early if doesn't pass validation
-        if(isOutsideBusinessHours(start, end)) {
+        if(isOutsideBusinessHours(start, end) || hasCustomerOverlap(customerID, start, end)) {
             return false;
         }
 
@@ -84,27 +86,5 @@ public class Appointment {
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ps.setInt(1, apptID);
         ps.executeUpdate();
-    }
-
-    private static boolean isOutsideBusinessHours(Date start, Date end) throws ParseException {
-        //convert to EST
-        String startEST = localToEST(start);
-        String endEST = localToEST(end);
-
-        //check if start or end is outside business hours
-        int startHour = Integer.parseInt(startEST.substring(11, 13));
-        int endHour = Integer.parseInt(endEST.substring(11, 13));
-        boolean isOutsideHours = startHour < 8 || startHour > 21 || endHour < 8 || endHour > 21;
-
-        //display error
-        if(isOutsideHours) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Invalid Appointment Time");
-            alert.setHeaderText(null);
-            alert.setContentText("Appointment start and end times must fall within business hours (8AM - 10PM EST).");
-            alert.showAndWait();
-        }
-
-        return isOutsideHours;
     }
 }
