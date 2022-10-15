@@ -104,10 +104,12 @@ public class EditApptForm implements Initializable {
         Integer userID = userIDPicker.getValue();
 
 //      pass values through to update function
-        Appointment.update(apptID, title, description, location, type, contactID, startDate, startHour, startMinute, endDate, endHour, endMinute, customerID, userID);
+        boolean successfulUpdate = Appointment.update(apptID, title, description, location, type, contactID, startDate, startHour, startMinute, endDate, endHour, endMinute, customerID, userID);
 
-        //switch back to appts page
-        SceneSwitcher.toAppts(actionEvent);
+        if(successfulUpdate) {
+            //switch back to appts page
+            SceneSwitcher.toAppts(actionEvent);
+        }
     }
 
     public void onCancel(ActionEvent actionEvent) throws IOException {

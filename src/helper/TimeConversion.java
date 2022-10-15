@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class TimeConversion {
     public static LocalDate formatDate(String dateString){
@@ -30,5 +31,12 @@ public class TimeConversion {
     public static String UTCToLocal(Date date){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return dateFormat.format(new Date(date.getTime() + Calendar.getInstance().getTimeZone().getOffset(new Date().getTime())));
+    }
+
+    public static String localToEST(Date date) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        TimeZone etTimeZone = TimeZone.getTimeZone("America/New_York");
+        dateFormat.setTimeZone( etTimeZone );
+        return dateFormat.format(date.getTime());
     }
 }

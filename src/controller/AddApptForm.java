@@ -67,10 +67,12 @@ public class AddApptForm implements Initializable {
         Integer userID = userIDPicker.getValue();
 
         //pass values through to creation function
-        Appointment.add(title, description, location, type, contactID, startDate, startHour, startMinute, endDate, endHour, endMinute, customerID, userID);
+        boolean successfulAdd = Appointment.add(title, description, location, type, contactID, startDate, startHour, startMinute, endDate, endHour, endMinute, customerID, userID);
 
-        //return to appointment page
-        SceneSwitcher.toAppts(actionEvent);
+        if(successfulAdd) {
+            //return to appointment page
+            SceneSwitcher.toAppts(actionEvent);
+        }
     }
 
     public void onCancel(ActionEvent actionEvent) throws IOException {
