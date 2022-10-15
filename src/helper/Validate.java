@@ -12,17 +12,25 @@ import java.util.Date;
 
 import static helper.TimeConversion.localToEST;
 import static helper.TimeConversion.localToUTC;
+import static main.Main.CURRENT_USER_ID;
 
 public class Validate {
-    public static void validateLogin(String userName, String password, ActionEvent event, String language) throws SQLException, IOException {
-        String sql = "SELECT 1 FROM users WHERE User_Name = ? AND Password = ?;";
+    public static boolean isValidUser(String userName, String password, String language) throws SQLException {
+        //search database for matching username and password
+        String sql = "SELECT * FROM users WHERE User_Name = ? AND Password = ?;";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ps.setString(1, userName);
         ps.setString(2, password);
         ResultSet result =  ps.executeQuery();
-        if(result.next()) {
-            SceneSwitcher.toAppts(event);
+
+        //check if user/pass matches database
+        boolean isValid = result.next();
+
+        if(isValid) {
+            //set current user ID
+            CURRENT_USER_ID = result.getInt("User_ID");
         } else {
+            //display alert
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
             if(language.equals("fr")) {
@@ -34,6 +42,7 @@ public class Validate {
             }
             alert.showAndWait();
         }
+        return isValid;
     }
 
     public static boolean isOutsideBusinessHours(Date start, Date end) throws ParseException {

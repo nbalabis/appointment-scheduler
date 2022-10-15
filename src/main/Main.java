@@ -10,15 +10,17 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Main extends Application {
+    public static Integer CURRENT_USER_ID = null;
 
     @Override
     public void start(Stage stage) throws Exception {
 //        Locale.setDefault(new Locale("fr"));
         Locale location = Locale.getDefault();
         String language = location.getLanguage();
-        Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Login.fxml")));
         if(language.equals("fr")) {
             stage.setTitle("Formulaire de Connexion");
         } else {
@@ -28,7 +30,7 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         JDBC.openConnection();
         launch(args);
         JDBC.closeConnection();

@@ -1,5 +1,6 @@
 package controller;
 
+import helper.SceneSwitcher;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -11,7 +12,8 @@ import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static helper.Validate.validateLogin;
+import static helper.Validate.isValidUser;
+import static main.Main.CURRENT_USER_ID;
 
 public class Login implements Initializable {
     public TextField userName;
@@ -40,6 +42,12 @@ public class Login implements Initializable {
     public void onLoginAction(ActionEvent actionEvent) throws SQLException, IOException {
         String userNameInput = userName.getText();
         String passwordInput = password.getText();
-        validateLogin(userNameInput, passwordInput, actionEvent, language);
+        boolean successfulLogin = isValidUser(userNameInput, passwordInput, language);
+        if(successfulLogin) {
+            SceneSwitcher.toAppts(actionEvent);
+
+            //TODO: CHECK FOR UPCOMING APPOINTMENTS FOR SPECIFIC USER AND DISPLAY ALERTS
+            System.out.println(CURRENT_USER_ID);
+        }
     }
 }

@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Objects;
 
+import static main.Main.CURRENT_USER_ID;
+
 public class SceneSwitcher {
 
     @FXML
@@ -29,6 +31,7 @@ public class SceneSwitcher {
 
     @FXML
     public static void toLogin(ActionEvent actionEvent) throws IOException {
+        CURRENT_USER_ID = null;
         Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/Login.fxml")));
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(root, 800, 600);
