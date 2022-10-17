@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -39,12 +40,7 @@ public class Customers implements Initializable {
 
         setCustomerTable();
 
-        customersTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<CustomersTable>() {
-            @Override
-            public void changed(ObservableValue<? extends CustomersTable> observableValue, CustomersTable customersTable, CustomersTable t1) {
-                editCustomerButton.setDisable(false);
-            }
-        });
+        customersTable.getSelectionModel().selectedItemProperty().addListener((observableValue, customersTable, t1) -> editCustomerButton.setDisable(false));
     }
 
     public void onAddCustomer(ActionEvent actionEvent) throws IOException {
@@ -75,6 +71,11 @@ public class Customers implements Initializable {
 
     public void onSwitchToAppt(ActionEvent actionEvent) throws IOException {
         SceneSwitcher.toAppts(actionEvent);
+    }
+
+    //Switch to reports page
+    public void onSwitchToReport(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toReports(actionEvent);
     }
 
     private void setCustomerTable() {

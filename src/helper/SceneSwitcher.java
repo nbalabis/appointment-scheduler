@@ -101,4 +101,14 @@ public class SceneSwitcher {
         stage.setScene(scene);
         stage.show();
     }
+
+    @FXML
+    public static void toReports(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/Reports.fxml")));
+        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root, 800, 600);
+        stage.setTitle("Reports");
+        stage.setScene(scene);
+        stage.show();
+    }
 }

@@ -204,4 +204,8 @@ public class Appointments implements Initializable {
         col_userID.setCellValueFactory(new PropertyValueFactory<>("userID"));
         col_contactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
     }
+
+    public void onSwitchToReport(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toReports(actionEvent);
+    }
 }
