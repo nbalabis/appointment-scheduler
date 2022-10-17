@@ -8,12 +8,14 @@ import javafx.scene.control.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static helper.Validate.isValidUser;
 import static main.Main.CURRENT_USER_ID;
+import static model.Appointment.displayUpcomingApts;
 
 public class Login implements Initializable {
     public TextField userName;
@@ -39,15 +41,15 @@ public class Login implements Initializable {
         }
     }
 
-    public void onLoginAction(ActionEvent actionEvent) throws SQLException, IOException {
+    public void onLoginAction(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
         String userNameInput = userName.getText();
         String passwordInput = password.getText();
         boolean successfulLogin = isValidUser(userNameInput, passwordInput, language);
         if(successfulLogin) {
             SceneSwitcher.toAppts(actionEvent);
 
-            //TODO: CHECK FOR UPCOMING APPOINTMENTS FOR SPECIFIC USER AND DISPLAY ALERTS
-            System.out.println(CURRENT_USER_ID);
+            //display any upcoming appointments
+            displayUpcomingApts(CURRENT_USER_ID);
         }
     }
 }
