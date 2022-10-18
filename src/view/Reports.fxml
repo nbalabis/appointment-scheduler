@@ -17,9 +17,16 @@
         <padding>
             <Insets bottom="50.0" left="25.0" right="25.0" top="65.0" />
         </padding>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
             <Label fx:id="choiceBoxLabel" text="Type" />
             <ChoiceBox fx:id="choiceBox" prefWidth="150.0" />
+           <HBox alignment="CENTER_RIGHT" prefWidth="555.0" spacing="25.0">
+               <Label text="View Appointment Report:" />
+               <RadioButton fx:id="viewByTypeRadioBtn" mnemonicParsing="false" text="By Type" />
+               <RadioButton fx:id="viewByMonthRadioBtn" mnemonicParsing="false" text="By Month" />
+            <RadioButton fx:id="viewByContactRadioBtn" layoutX="452.0" layoutY="14.0" mnemonicParsing="false" text="By Contact" />
+            <RadioButton fx:id="viewPersonalRadioBtn" layoutX="486.0" layoutY="14.0" mnemonicParsing="false" text="My Apts" />
+           </HBox>
         </HBox>
         <TableView fx:id="reportsTable" prefHeight="600.0" prefWidth="800.0">
             <columns>
@@ -43,12 +50,6 @@
         <Button mnemonicParsing="false" onAction="#onSwitchToCustomer" text="Customers" />
         <Button mnemonicParsing="false" onAction="#onSwitchToApt" text="Appointments" />
         <Button disable="true" layoutX="87.0" layoutY="10.0" mnemonicParsing="false" text="Reports" />
-        <HBox alignment="CENTER_RIGHT" prefWidth="515.0" spacing="25.0">
-            <Label text="View Appointment Report:" />
-            <RadioButton fx:id="viewByTypeRadioBtn" mnemonicParsing="false" text="By Type" />
-            <RadioButton fx:id="viewByMonthRadioBtn" mnemonicParsing="false" text="By Month" />
-         <RadioButton fx:id="viewByContactRadioBtn" layoutX="452.0" layoutY="14.0" mnemonicParsing="false" text="By Contact" />
-        </HBox>
     </ToolBar>
     <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <padding>

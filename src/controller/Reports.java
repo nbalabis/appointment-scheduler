@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.ResourceBundle;
 
 import static helper.TimeConversion.UTCToLocal;
+import static main.Main.CURRENT_USER_ID;
 
 public class Reports implements Initializable {
     public Label choiceBoxLabel;
@@ -45,6 +46,7 @@ public class Reports implements Initializable {
     public RadioButton viewByTypeRadioBtn;
     public RadioButton viewByMonthRadioBtn;
     public RadioButton viewByContactRadioBtn;
+    public RadioButton viewPersonalRadioBtn;
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
 
@@ -58,6 +60,7 @@ public class Reports implements Initializable {
         viewByTypeRadioBtn.setToggleGroup(reportViewGroup);
         viewByMonthRadioBtn.setToggleGroup(reportViewGroup);
         viewByContactRadioBtn.setToggleGroup(reportViewGroup);
+        viewPersonalRadioBtn.setToggleGroup(reportViewGroup);
         viewByTypeRadioBtn.setSelected(true);
 
         //create radio btn group listener
@@ -65,18 +68,26 @@ public class Reports implements Initializable {
             RadioButton selected = (RadioButton) reportViewGroup.getSelectedToggle();
             //determine which radio button is selected
             switch (selected.getId()) {
-                //clear the table, then set the choice box
+                //clear the table, set choicebox/label visibility, then set the choice box
                 case "viewByTypeRadioBtn":
                     reportsTable.getItems().clear();
+                    showChoices(true);
                     setChoiceBoxTypes();
                     break;
                 case "viewByMonthRadioBtn":
                     reportsTable.getItems().clear();
+                    showChoices(true);
                     setChoiceBoxMonths();
                     break;
                 case "viewByContactRadioBtn":
                     reportsTable.getItems().clear();
+                    showChoices(true);
                     setChoiceBoxContacts();
+                    break;
+                case "viewPersonalRadioBtn":
+                    reportsTable.getItems().clear();
+                    showChoices(false);
+                    setReportsTableViewPersonal();
                     break;
             }
         });
@@ -100,6 +111,7 @@ public class Reports implements Initializable {
                     break;
                 case "viewByContactRadioBtn":
                     setReportsTableViewByContact(selectedItem);
+                    break;
             }
         });
     }
@@ -255,6 +267,24 @@ public class Reports implements Initializable {
         reportsTable.setItems(oblist);
     }
 
+    //Set the reports table to view current user's appointments
+    private void setReportsTableViewPersonal() {
+        //get data from database
+        String sql = "SELECT * FROM appointments WHERE User_ID = ?;";
+        try {
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+            ps.setInt(1, CURRENT_USER_ID);
+            ResultSet result  = ps.executeQuery();
+            addToObList(result);
+        } catch (SQLException | ParseException throwables) {
+            throwables.printStackTrace();
+        }
+
+        //fill table with results
+        setCellValueFactories();
+        reportsTable.setItems(oblist);
+    }
+
     private void addToObList(ResultSet result) throws SQLException, ParseException {
         //convert dates from UTC to Local
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -286,5 +316,10 @@ public class Reports implements Initializable {
         col_customerID.setCellValueFactory(new PropertyValueFactory<>("customerID"));
         col_userID.setCellValueFactory(new PropertyValueFactory<>("userID"));
         col_contactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+    }
+
+    private void showChoices(boolean view) {
+        choiceBox.setVisible(view);
+        choiceBoxLabel.setVisible(view);
     }
 }
