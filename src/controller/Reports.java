@@ -2,6 +2,7 @@ package controller;
 
 import helper.JDBC;
 import helper.SceneSwitcher;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -12,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
 import model.AppointmentsTable;
+import model.Contact;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,6 +44,7 @@ public class Reports implements Initializable {
     public TableColumn<Object, Object> col_contactID;
     public RadioButton viewByTypeRadioBtn;
     public RadioButton viewByMonthRadioBtn;
+    public RadioButton viewByContactRadioBtn;
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
 
@@ -54,12 +57,15 @@ public class Reports implements Initializable {
         final ToggleGroup reportViewGroup = new ToggleGroup();
         viewByTypeRadioBtn.setToggleGroup(reportViewGroup);
         viewByMonthRadioBtn.setToggleGroup(reportViewGroup);
+        viewByContactRadioBtn.setToggleGroup(reportViewGroup);
         viewByTypeRadioBtn.setSelected(true);
 
         //create radio btn group listener
         reportViewGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
             RadioButton selected = (RadioButton) reportViewGroup.getSelectedToggle();
+            //determine which radio button is selected
             switch (selected.getId()) {
+                //clear the table, then set the choice box
                 case "viewByTypeRadioBtn":
                     reportsTable.getItems().clear();
                     setChoiceBoxTypes();
@@ -67,6 +73,10 @@ public class Reports implements Initializable {
                 case "viewByMonthRadioBtn":
                     reportsTable.getItems().clear();
                     setChoiceBoxMonths();
+                    break;
+                case "viewByContactRadioBtn":
+                    reportsTable.getItems().clear();
+                    setChoiceBoxContacts();
                     break;
             }
         });
@@ -76,18 +86,20 @@ public class Reports implements Initializable {
             //clear out anything in table
             reportsTable.getItems().clear();
 
-            //check which radio button is selected
+            //check which radio button and choicebox is selected
             RadioButton selected = (RadioButton) reportViewGroup.getSelectedToggle();
+            String selectedItem = choiceBox.getItems().get((Integer) t1);
+
             switch (selected.getId()) {
+                //set table to that filter
                 case "viewByTypeRadioBtn":
-                    //get selected type
-                    String selectedType = choiceBox.getItems().get((Integer) t1);
-                    setReportsTableViewByType(selectedType);
+                    setReportsTableViewByType(selectedItem);
                     break;
                 case "viewByMonthRadioBtn":
-                    String selectedMonth = choiceBox.getItems().get((Integer) t1);
-                    setReportsTableViewByMonth(selectedMonth);
+                    setReportsTableViewByMonth(selectedItem);
                     break;
+                case "viewByContactRadioBtn":
+                    setReportsTableViewByContact(selectedItem);
             }
         });
     }
@@ -108,7 +120,7 @@ public class Reports implements Initializable {
     }
 
     private void setChoiceBoxTypes() {
-        ObservableList<String> types = null;
+        ObservableList<String> types = FXCollections.observableArrayList();
         
         //get all distinct apt types
         try {
@@ -127,6 +139,21 @@ public class Reports implements Initializable {
         months.addAll("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
         choiceBox.setItems(months);
         choiceBoxLabel.setText("Month");
+    }
+
+    //Set the choice box to display all contacts
+    private void setChoiceBoxContacts() {
+        //get all contacts from database
+        ObservableList<String> contacts = FXCollections.observableArrayList();
+        try {
+            contacts = Contact.getAllNames();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        //set choice box and label
+        choiceBox.setItems(contacts);
+        choiceBoxLabel.setText("Contact Name");
     }
 
     //Set the reports table to View appointments by type
@@ -202,6 +229,23 @@ public class Reports implements Initializable {
             ps.setInt(1, selectedMonth);
             ps.setInt(2, currentYear);
             ResultSet result =  ps.executeQuery();
+            addToObList(result);
+        } catch (SQLException | ParseException throwables) {
+            throwables.printStackTrace();
+        }
+
+        setCellValueFactories();
+        reportsTable.setItems(oblist);
+    }
+
+    //Set the reports table to filter by selected contact name
+    private void setReportsTableViewByContact(String name) {
+        //get data from database
+        String sql = "SELECT * FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE contacts.Contact_Name = ?;";
+        try {
+            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+            ps.setString(1, name);
+            ResultSet result = ps.executeQuery();
             addToObList(result);
         } catch (SQLException | ParseException throwables) {
             throwables.printStackTrace();

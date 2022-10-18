@@ -19,4 +19,20 @@ public class Contact {
         }
         return IDs;
     }
+
+    //Return a list of all contact names
+    public static ObservableList<String> getAllNames() throws SQLException {
+        //Get all names from database
+        String sql = "SELECT Contact_Name FROM contacts;";
+        ObservableList<String> names = FXCollections.observableArrayList();
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet result = ps.executeQuery();
+
+        //Add each name to result
+        while(result.next()) {
+            names.add(result.getString("Contact_Name"));
+        }
+
+        return names;
+    }
 }
