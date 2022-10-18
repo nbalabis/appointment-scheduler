@@ -1,6 +1,8 @@
 package model;
 
 import helper.JDBC;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 
 import java.sql.PreparedStatement;
@@ -133,5 +135,16 @@ public class Appointment {
             alert.setContentText("You do not have any appointments scheduled in the next 15 minutes.");
             alert.showAndWait();
         }
+    }
+
+    public static ObservableList<String> getTypes() throws SQLException {
+        String sql = "SELECT DISTINCT Type FROM appointments;";
+        ObservableList<String> types = FXCollections.observableArrayList();
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet result = ps.executeQuery();
+        while(result.next()) {
+            types.add(result.getString("Type"));
+        }
+        return types;
     }
 }
