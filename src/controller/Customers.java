@@ -32,6 +32,7 @@ public class Customers implements Initializable {
     public TableColumn<CustomersTable, String> col_phone;
     public TableColumn<CustomersTable, Integer> col_divisionID;
     public Button editCustomerButton;
+    public Button deleteCustomerButton;
 
     ObservableList<CustomersTable> obList = FXCollections.observableArrayList();
 
@@ -40,7 +41,10 @@ public class Customers implements Initializable {
 
         setCustomerTable();
 
-        customersTable.getSelectionModel().selectedItemProperty().addListener((observableValue, customersTable, t1) -> editCustomerButton.setDisable(false));
+        customersTable.getSelectionModel().selectedItemProperty().addListener((observableValue, customersTable, t1) -> {
+            editCustomerButton.setDisable(false);
+            deleteCustomerButton.setDisable(false);
+        });
     }
 
     public void onAddCustomer(ActionEvent actionEvent) throws IOException {
@@ -61,8 +65,9 @@ public class Customers implements Initializable {
         //display confirmation prompt
         CustomerDeletePopup.display(customerID);
 
-        //refresh customer table
+        //refresh customer table and buttons
         setCustomerTable();
+        disableButtons();
     }
 
     public void onLogout(ActionEvent actionEvent) throws IOException {
@@ -106,5 +111,10 @@ public class Customers implements Initializable {
         col_divisionID.setCellValueFactory(new PropertyValueFactory<>("divisionID"));
 
         customersTable.setItems(obList);
+    }
+
+    private void disableButtons() {
+        editCustomerButton.setDisable(true);
+        deleteCustomerButton.setDisable(true);
     }
 }

@@ -2,8 +2,6 @@ package controller;
 
 import helper.JDBC;
 import helper.SceneSwitcher;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -37,10 +35,11 @@ public class Appointments implements Initializable {
     public TableColumn<model.AppointmentsTable, Integer> col_customerID;
     public TableColumn<model.AppointmentsTable, Integer> col_userID;
     public TableColumn<model.AppointmentsTable, Integer> col_contactID;
-    public Button editApptButton;
+    public Button editAptButton;
     public RadioButton monthlyViewRadioBtn;
     public RadioButton weeklyViewRadioBtn;
     public RadioButton allViewRadioBtn;
+    public Button deleteAptButton;
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
 
@@ -49,8 +48,11 @@ public class Appointments implements Initializable {
         //set Appointment table initially
         setAptTableAll();
 
-        //enable editApptButton when an appt is selected
-        appointmentsTable.getSelectionModel().selectedItemProperty().addListener((observableValue, appointmentsTable, t1) -> editApptButton.setDisable(false));
+        //enable editApptButton and deleteAptButton when an appt is selected
+        appointmentsTable.getSelectionModel().selectedItemProperty().addListener((observableValue, appointmentsTable, t1) -> {
+            editAptButton.setDisable(false);
+            deleteAptButton.setDisable(false);
+        });
 
         //set up radio btn group
         final ToggleGroup aptViewGroup = new ToggleGroup();
@@ -92,14 +94,16 @@ public class Appointments implements Initializable {
 
     public void onDeleteAppt(ActionEvent actionEvent) throws SQLException {
         //get selected appt
-        AppointmentsTable selectedAppt = appointmentsTable.getSelectionModel().getSelectedItem();
-        Integer apptID = selectedAppt.getApptID();
+        AppointmentsTable selectedApt = appointmentsTable.getSelectionModel().getSelectedItem();
+
+        Integer apptID = selectedApt.getApptID();
 
         //delete from database
         Appointment.delete(apptID);
 
-        //refresh table
+        //refresh table and buttons
         setAptTableAll();
+        disableButtons();
     }
 
     public void onLogout(ActionEvent actionEvent) throws IOException {
@@ -207,5 +211,10 @@ public class Appointments implements Initializable {
 
     public void onSwitchToReport(ActionEvent actionEvent) throws IOException {
         SceneSwitcher.toReports(actionEvent);
+    }
+
+    private void disableButtons() {
+        editAptButton.setDisable(true);
+        deleteAptButton.setDisable(true);
     }
 }
