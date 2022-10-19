@@ -12,6 +12,9 @@ import java.text.ParseException;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import static helper.Validate.isValidUser;
 import static main.Main.CURRENT_USER_ID;
@@ -45,11 +48,30 @@ public class Login implements Initializable {
         String userNameInput = userName.getText();
         String passwordInput = password.getText();
         boolean successfulLogin = isValidUser(userNameInput, passwordInput, language);
+
+        //log login activity
+        logger.info("Login successful: " + successfulLogin);
+
+        //switch scenes and display upcoming apts
         if(successfulLogin) {
             SceneSwitcher.toAppts(actionEvent);
-
-            //display any upcoming appointments
             displayUpcomingApts(CURRENT_USER_ID);
         }
     }
+
+    private static final Logger logger = java.util.logging.Logger.getLogger("LoginActivity");
+    static {
+        try {
+            FileHandler fh;
+            logger.setUseParentHandlers(false);
+            //configure logger w/ handler and formatter
+            fh = new FileHandler("./login_activity.txt", true);
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
 }
