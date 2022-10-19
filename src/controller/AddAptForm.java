@@ -48,6 +48,11 @@ public class AddAptForm implements Initializable {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
+        //set initial contact, customer, and user choiceboxes
+        contactIDPicker.getSelectionModel().selectFirst();
+        customerIDPicker.getSelectionModel().selectFirst();
+        userIDPicker.getSelectionModel().selectFirst();
     }
 
     public void onCreateNewAppt(ActionEvent actionEvent) throws IOException, SQLException, ParseException {

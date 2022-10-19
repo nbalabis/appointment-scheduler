@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-public class AddCustomer implements Initializable {
+public class AddCustomerForm implements Initializable {
     public TextField customerNameInput;
     public TextField addressInput;
     public TextField postalCodeInput;
@@ -61,38 +61,41 @@ public class AddCustomer implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> countryList = FXCollections.observableArrayList("Canada", "United Kingdom", "United States");
         countryPicker.setItems(countryList);
-        countryPicker.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                String countryChoice = countryPicker.getItems().get((Integer) t1);
-                Integer countryID = null;
-                switch (countryChoice) {
-                    case "United States":
-                        countryID = 1;
-                        break;
-                    case "United Kingdom":
-                        countryID = 2;
-                        break;
-                    case "Canada":
-                        countryID = 3;
-                        break;
-                }
-
-                String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = " + countryID;
-                ObservableList<String> divisionList = FXCollections.observableArrayList();
-                try {
-                    PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-                    ResultSet result = ps.executeQuery();
-                    while(result.next()) {
-                        divisionList.add(result.getString("Division"));
-                    }
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-
-                divisionPicker.setItems(divisionList);
-                divisionPicker.setDisable(false);
+        countryPicker.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> {
+            String countryChoice = countryPicker.getItems().get((Integer) t1);
+            Integer countryID = null;
+            switch (countryChoice) {
+                case "United States":
+                    countryID = 1;
+                    break;
+                case "United Kingdom":
+                    countryID = 2;
+                    break;
+                case "Canada":
+                    countryID = 3;
+                    break;
             }
+
+            String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = " + countryID;
+            ObservableList<String> divisionList = FXCollections.observableArrayList();
+            try {
+                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ResultSet result = ps.executeQuery();
+                while(result.next()) {
+                    divisionList.add(result.getString("Division"));
+                }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+            divisionPicker.setItems(divisionList);
+            divisionPicker.setDisable(false);
+            divisionPicker.getSelectionModel().selectFirst();
         });
+
+        //set initial contact, customer, and user choiceboxes
+        countryPicker.getSelectionModel().selectFirst();
+        divisionPicker.getSelectionModel().selectFirst();
     }
+
 }
