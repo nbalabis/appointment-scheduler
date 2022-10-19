@@ -11,21 +11,29 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class Main extends Application {
     public static Integer CURRENT_USER_ID = null;
 
+
+
     @Override
     public void start(Stage stage) throws Exception {
+        //get locale and language
 //        Locale.setDefault(new Locale("fr"));
-        Locale location = Locale.getDefault();
-        String language = location.getLanguage();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Login.fxml")));
-        if(language.equals("fr")) {
-            stage.setTitle("Formulaire de Connexion");
+        Locale locale = Locale.getDefault();
+        String language = locale.getLanguage();
+        String stageTitle;
+        ResourceBundle rb = ResourceBundle.getBundle("Nat", locale);
+        if (language.equals("fr")) {
+            stageTitle = rb.getString("LoginStageTitle");
         } else {
-            stage.setTitle("Login Form");
+            stageTitle = "Login Form";
         }
+
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/Login.fxml")));
+        stage.setTitle(stageTitle);
         stage.setScene(new Scene(root, 800, 600));
         stage.show();
     }

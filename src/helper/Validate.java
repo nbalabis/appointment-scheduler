@@ -1,21 +1,20 @@
 package helper;
 
-import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import static helper.TimeConversion.localToEST;
 import static helper.TimeConversion.localToUTC;
 import static main.Main.CURRENT_USER_ID;
 
 public class Validate {
-    public static boolean isValidUser(String userName, String password, String language) throws SQLException {
+    public static boolean isValidUser(String userName, String password, String language, ResourceBundle rb) throws SQLException {
         //search database for matching username and password
         String sql = "SELECT * FROM users WHERE User_Name = ? AND Password = ?;";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -34,8 +33,8 @@ public class Validate {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
             if(language.equals("fr")) {
-                alert.setTitle("Utilisateur non trouvé");
-                alert.setContentText("Nom d'utilisateur/mot de passe invalide. Veuillez réessayer.");
+                alert.setTitle(rb.getString("alertTitle"));
+                alert.setContentText(rb.getString("alertContentText"));
             } else {
                 alert.setTitle("User Not Found");
                 alert.setContentText("Invalid Username/Password. Please try again.");

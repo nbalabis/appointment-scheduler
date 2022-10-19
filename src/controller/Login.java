@@ -28,26 +28,26 @@ public class Login implements Initializable {
     public Label passwordLabel;
     public Button loginButton;
 
-    Locale location = Locale.getDefault();
-    String language = location.getLanguage();
+    Locale locale = Locale.getDefault();
+    String language = locale.getLanguage();
+    ResourceBundle rb = ResourceBundle.getBundle("Nat", locale);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ZoneId zone = ZoneId.systemDefault();
         userLocationLabel.setText("Location: " + zone);
-
         if(language.equals("fr")) {
-            usernameLabel.setText("Nom d'utilisateur:");
-            passwordLabel.setText("Mot de passe:");
-            loginButton.setText("Connexion");
-            userLocationLabel.setText("Emplacement: " + zone);
+            usernameLabel.setText(rb.getString("usernameLabel"));
+            passwordLabel.setText(rb.getString("passwordLabel"));
+            loginButton.setText(rb.getString("loginButton"));
+            userLocationLabel.setText(rb.getString("userLocationLabel") + " " + zone);
         }
     }
 
     public void onLoginAction(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
         String userNameInput = userName.getText();
         String passwordInput = password.getText();
-        boolean successfulLogin = isValidUser(userNameInput, passwordInput, language);
+        boolean successfulLogin = isValidUser(userNameInput, passwordInput, language, rb);
 
         //log login activity
         logger.info("Login successful: " + successfulLogin);
