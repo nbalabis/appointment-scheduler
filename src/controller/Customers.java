@@ -41,6 +41,7 @@ public class Customers implements Initializable {
 
         setCustomerTable();
 
+        //LAMBDA EXPRESSION
         customersTable.getSelectionModel().selectedItemProperty().addListener((observableValue, customersTable, t1) -> {
             editCustomerButton.setDisable(false);
             deleteCustomerButton.setDisable(false);

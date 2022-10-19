@@ -25,7 +25,9 @@ public class CustomerDeletePopup {
         Button deleteButton = new Button("Delete");
         Button cancelButton= new Button("Cancel");
 
+        //LAMBDA EXPRESSION
         cancelButton.setOnAction(e -> popupwindow.close());
+        //LAMBDA EXPRESSION
         deleteButton.setOnAction(e ->{
             //delete customer
             try {

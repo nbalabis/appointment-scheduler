@@ -64,6 +64,7 @@ public class Reports implements Initializable {
         viewByTypeRadioBtn.setSelected(true);
 
         //create radio btn group listener
+        //LAMBDA EXPRESSION
         reportViewGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
             RadioButton selected = (RadioButton) reportViewGroup.getSelectedToggle();
             //determine which radio button is selected
@@ -93,6 +94,7 @@ public class Reports implements Initializable {
         });
 
         //create choicebox listener
+        //LAMBDA EXPRESSION
         choiceBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> {
             //clear out anything in table
             reportsTable.getItems().clear();

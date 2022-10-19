@@ -90,6 +90,7 @@ public class EditCustomerForm implements Initializable {
         ObservableList<String> countryList = FXCollections.observableArrayList("Canada", "United Kingdom", "United States");
         countryPicker.setItems(countryList);
 
+        //LAMBDA EXPRESSION
         countryPicker.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> {
             String countryChoice = countryPicker.getItems().get((Integer) t1);
             Integer countryID = null;

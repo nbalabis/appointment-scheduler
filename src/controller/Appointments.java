@@ -49,6 +49,7 @@ public class Appointments implements Initializable {
         setAptTableAll();
 
         //enable editApptButton and deleteAptButton when an appt is selected
+        //LAMBDA EXPRESSION
         appointmentsTable.getSelectionModel().selectedItemProperty().addListener((observableValue, appointmentsTable, t1) -> {
             editAptButton.setDisable(false);
             deleteAptButton.setDisable(false);
@@ -62,6 +63,7 @@ public class Appointments implements Initializable {
         allViewRadioBtn.setSelected(true);
 
         //create radio btn group listener
+        //LAMBDA EXPRESSION
         aptViewGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
             RadioButton selected = (RadioButton) aptViewGroup.getSelectedToggle();
             switch (selected.getId()) {

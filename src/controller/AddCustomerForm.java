@@ -58,6 +58,7 @@ public class AddCustomerForm implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> countryList = FXCollections.observableArrayList("Canada", "United Kingdom", "United States");
         countryPicker.setItems(countryList);
+        //LAMBDA EXPRESSION
         countryPicker.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> {
             String countryChoice = countryPicker.getItems().get((Integer) t1);
             Integer countryID = null;
