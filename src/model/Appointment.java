@@ -30,7 +30,7 @@ public class Appointment {
         Date end = convertToDate(endDate, endHour, endMinute);
 
         //exit function early if doesn't pass validation
-        if(isOutsideBusinessHours(start, end) || hasCustomerOverlap(customerID, start, end)) {
+        if(isOutsideBusinessHours(start, end) || hasCustomerOverlap(null, customerID, start, end)) {
             return false;
         }
 
@@ -55,13 +55,13 @@ public class Appointment {
         return true;
     }
 
-    public static boolean update(Integer apptID, String title, String description, String location, String type, Integer contactID, LocalDate startDate, Integer startHour, Integer startMinute, LocalDate endDate, Integer endHour, Integer endMinute, Integer customerID, Integer userID) throws SQLException, ParseException {
+    public static boolean update(Integer aptID, String title, String description, String location, String type, Integer contactID, LocalDate startDate, Integer startHour, Integer startMinute, LocalDate endDate, Integer endHour, Integer endMinute, Integer customerID, Integer userID) throws SQLException, ParseException {
         //convert data to date
         Date start = convertToDate(startDate, startHour, startMinute);
         Date end = convertToDate(endDate, endHour, endMinute);
 
         //exit function early if doesn't pass validation
-        if(isOutsideBusinessHours(start, end) || hasCustomerOverlap(customerID, start, end)) {
+        if(isOutsideBusinessHours(start, end) || hasCustomerOverlap(aptID, customerID, start, end)) {
             return false;
         }
 
@@ -81,7 +81,7 @@ public class Appointment {
         ps.setString(7, endUTC);
         ps.setInt(8, customerID);
         ps.setInt(9, userID);
-        ps.setInt(10, apptID);
+        ps.setInt(10, aptID);
         ps.executeUpdate();
 
         return true;

@@ -66,7 +66,7 @@ public class Validate {
         return isOutsideHours;
     }
 
-    public static boolean hasCustomerOverlap(Integer customerID, Date start, Date end) throws SQLException {
+    public static boolean hasCustomerOverlap(Integer aptID, Integer customerID, Date start, Date end) throws SQLException {
         //dates are in local time --db dates are in utc
         //convert dates to UTC
         String startUTC = localToUTC(start);
@@ -74,6 +74,7 @@ public class Validate {
 
         //get all apts from database that match customer and fall between start and end
         String sql = "SELECT * FROM Appointments WHERE Customer_ID = ? AND Start BETWEEN ? AND ? OR End BETWEEN ? AND ?;";
+
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ps.setInt(1, customerID);
         ps.setString(2, startUTC);
@@ -84,6 +85,8 @@ public class Validate {
 
         //check if overlap exists
         boolean hasOverlap = result.next();
+        //exclude overlaps with itself
+        if(hasOverlap && aptID != null && result.getInt("Appointment_ID") == aptID) hasOverlap = false;
 
         //display error
         if(hasOverlap) {
