@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 import static helper.TimeConversion.UTCToLocal;
 import static helper.TimeConversion.formatDate;
 
-public class EditApptForm implements Initializable {
+public class EditAptForm implements Initializable {
     public TextField titleInput;
     public TextField descriptionInput;
     public TextField locationInput;

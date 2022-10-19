@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
+import model.Customer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,22 +32,18 @@ public class AddCustomerForm implements Initializable {
     }
 
     public void onCreateNewCustomer(ActionEvent actionEvent) throws SQLException, IOException {
+        //collect all input values
         String customerName = customerNameInput.getText();
         String address = addressInput.getText();
         String postalCode = postalCodeInput.getText();
         String phone = phoneInput.getText();
         Integer divisionID = getDivisionID(divisionPicker.getValue());
 
-        String sql = "INSERT INTO customers (Customer_name, Address, Postal_Code, Phone, Division_ID) VALUES (?, ?, ?, ?, ?);";
-        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setString(1, customerName);
-        ps.setString(2, address);
-        ps.setString(3, postalCode);
-        ps.setString(4, phone);
-        ps.setInt(5, divisionID);
-        ps.executeUpdate();
+        //pass values through to function
+        boolean successfulAdd = Customer.add(customerName, address, postalCode, phone, divisionID);
 
-        SceneSwitcher.toCustomers(actionEvent);
+        //return to customers page
+        if(successfulAdd) SceneSwitcher.toCustomers(actionEvent);
     }
 
     public Integer getDivisionID(String division) throws SQLException {

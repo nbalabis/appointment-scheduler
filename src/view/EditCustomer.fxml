@@ -12,85 +12,88 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditCustomer">
-    <children>
-        <VBox alignment="CENTER" layoutX="193.0" layoutY="-40.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <children>
-                <GridPane alignment="CENTER">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                    <children>
-                        <Label text="Customer Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-                            <GridPane.margin>
-                                <Insets right="25.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label text="Address:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
-                            <GridPane.margin>
-                                <Insets right="25.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="47.0" text="Postal Code:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-                            <GridPane.margin>
-                                <Insets right="25.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label layoutX="10.0" layoutY="17.0" text="Phone Number:" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
-                            <GridPane.margin>
-                                <Insets right="25.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <TextField fx:id="customerNameInput" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="addressInput" layoutX="110.0" layoutY="13.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="postalCodeInput" layoutX="110.0" layoutY="43.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField fx:id="phoneInput" layoutX="110.0" layoutY="73.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label layoutX="201.0" layoutY="117.0" text="Country:" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
-                            <GridPane.margin>
-                                <Insets right="25.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label layoutX="240.0" layoutY="147.0" text="Division:" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
-                            <GridPane.margin>
-                                <Insets right="25.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <ChoiceBox fx:id="countryPicker" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <ChoiceBox fx:id="divisionPicker" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                  <Label layoutX="196.0" layoutY="57.0" text="Customer ID:" GridPane.halignment="RIGHT">
-                     <GridPane.margin>
-                        <Insets right="25.0" />
-                     </GridPane.margin>
-                  </Label>
-                  <TextField fx:id="customerIDInput" disable="true" layoutX="310.0" layoutY="53.0" GridPane.columnIndex="1" />
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
-                    </padding>
-                </GridPane>
-                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                    <children>
-                        <Button mnemonicParsing="false" onAction="#onUpdateCustomer" text="Update Customer" />
-                        <Button layoutX="284.0" layoutY="48.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel" />
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
-                    </padding>
-                </HBox>
-            </children>
-        </VBox>
-    </children>
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.EditCustomerForm">
+    <VBox alignment="CENTER" layoutX="193.0" layoutY="-40.0" prefHeight="200.0" prefWidth="100.0"
+          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
+        <GridPane alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <padding>
+                <Insets bottom="10.0" left="25.0" right="25.0" top="10.0"/>
+            </padding>
+            <Label text="Customer Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                <GridPane.margin>
+                    <Insets right="25.0"/>
+                </GridPane.margin>
+            </Label>
+            <Label text="Address:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                <GridPane.margin>
+                    <Insets right="25.0"/>
+                </GridPane.margin>
+            </Label>
+            <Label layoutX="10.0" layoutY="47.0" text="Postal Code:" GridPane.halignment="RIGHT"
+                   GridPane.rowIndex="3">
+                <GridPane.margin>
+                    <Insets right="25.0"/>
+                </GridPane.margin>
+            </Label>
+            <Label layoutX="10.0" layoutY="17.0" text="Phone Number:" GridPane.halignment="RIGHT"
+                   GridPane.rowIndex="4">
+                <GridPane.margin>
+                    <Insets right="25.0"/>
+                </GridPane.margin>
+            </Label>
+            <TextField fx:id="customerNameInput" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="addressInput" layoutX="110.0" layoutY="13.0" GridPane.columnIndex="1"
+                       GridPane.rowIndex="2"/>
+            <TextField fx:id="postalCodeInput" layoutX="110.0" layoutY="43.0" GridPane.columnIndex="1"
+                       GridPane.rowIndex="3"/>
+            <TextField fx:id="phoneInput" layoutX="110.0" layoutY="73.0" GridPane.columnIndex="1"
+                       GridPane.rowIndex="4"/>
+            <Label layoutX="201.0" layoutY="117.0" text="Country:" GridPane.halignment="RIGHT"
+                   GridPane.rowIndex="5">
+                <GridPane.margin>
+                    <Insets right="25.0"/>
+                </GridPane.margin>
+            </Label>
+            <Label layoutX="240.0" layoutY="147.0" text="Division:" GridPane.halignment="RIGHT"
+                   GridPane.rowIndex="6">
+                <GridPane.margin>
+                    <Insets right="25.0"/>
+                </GridPane.margin>
+            </Label>
+            <ChoiceBox fx:id="countryPicker" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <ChoiceBox fx:id="divisionPicker" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <Label layoutX="196.0" layoutY="57.0" text="Customer ID:" GridPane.halignment="RIGHT">
+                <GridPane.margin>
+                    <Insets right="25.0"/>
+                </GridPane.margin>
+            </Label>
+            <TextField fx:id="customerIDInput" disable="true" layoutX="310.0" layoutY="53.0"
+                       GridPane.columnIndex="1"/>
+        </GridPane>
+        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <padding>
+                <Insets bottom="10.0" left="25.0" right="25.0" top="10.0"/>
+            </padding>
+            <Button mnemonicParsing="false" onAction="#onUpdateCustomer" text="Update Customer"/>
+            <Button layoutX="284.0" layoutY="48.0" mnemonicParsing="false" onAction="#onCancel" text="Cancel"/>
+        </HBox>
+    </VBox>
 </AnchorPane>

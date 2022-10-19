@@ -1,7 +1,7 @@
 package helper;
 
-import controller.EditApptForm;
-import controller.EditCustomer;
+import controller.EditAptForm;
+import controller.EditCustomerForm;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -65,7 +65,7 @@ public class SceneSwitcher {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/EditCustomer.fxml")));
         Parent root = loader.load();
 
-        EditCustomer controller = loader.getController();
+        EditCustomerForm controller = loader.getController();
         controller.setCustomerData(customerID);
 
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -91,7 +91,7 @@ public class SceneSwitcher {
         Parent root = loader.load();
 
         //pass appt ID to controller
-        EditApptForm controller = loader.getController();
+        EditAptForm controller = loader.getController();
         controller.setApptData(apptID);
 
         //show stage
