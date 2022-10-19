@@ -21,6 +21,7 @@ public class CustomerDeletePopup {
         popupwindow.setTitle("Confirm Delete");
 
         Label title= new Label("Are you sure you want to delete this customer?");
+        Label subTitle = new Label("This will also delete any associated appointments.");
         Button deleteButton = new Button("Delete");
         Button cancelButton= new Button("Cancel");
 
@@ -36,11 +37,10 @@ public class CustomerDeletePopup {
             //close popup
             popupwindow.close();
 
-            //TODO: ADD CONFIRMATION POPUP
         });
 
         VBox layout= new VBox(10);
-        layout.getChildren().addAll(title, deleteButton, cancelButton);
+        layout.getChildren().addAll(title, subTitle, deleteButton, cancelButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene1= new Scene(layout, 300, 250);

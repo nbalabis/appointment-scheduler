@@ -17,7 +17,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
-public class AddApptForm implements Initializable {
+public class AddAptForm implements Initializable {
     public TextField titleInput;
     public TextField descriptionInput;
     public TextField locationInput;

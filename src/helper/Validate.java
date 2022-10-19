@@ -99,4 +99,19 @@ public class Validate {
 
         return hasOverlap;
     }
+
+    public static boolean isEmpty(String field) {
+        //check if string is empty
+        boolean emptyField = field.equals("");
+
+        if(emptyField) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Invalid Entry");
+            alert.setHeaderText(null);
+            alert.setContentText("There are one or more empty fields. Please fill out each one before submitting.");
+            alert.showAndWait();
+        }
+
+        return emptyField;
+    }
 }

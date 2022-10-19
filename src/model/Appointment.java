@@ -20,8 +20,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import static helper.TimeConversion.*;
-import static helper.Validate.hasCustomerOverlap;
-import static helper.Validate.isOutsideBusinessHours;
+import static helper.Validate.*;
 
 public class Appointment {
     public static boolean add(String title, String description, String location, String type, Integer contactID, LocalDate startDate, Integer startHour, Integer startMinute, LocalDate endDate, Integer endHour, Integer endMinute, Integer customerID, Integer userID) throws SQLException, ParseException {
@@ -30,7 +29,9 @@ public class Appointment {
         Date end = convertToDate(endDate, endHour, endMinute);
 
         //exit function early if doesn't pass validation
-        if(isOutsideBusinessHours(start, end) || hasCustomerOverlap(null, customerID, start, end)) {
+        if(isOutsideBusinessHours(start, end) ||
+                hasCustomerOverlap(null, customerID, start, end) ||
+                isEmpty(title) || isEmpty(description) || isEmpty(location) || isEmpty(type)) {
             return false;
         }
 
@@ -61,7 +62,9 @@ public class Appointment {
         Date end = convertToDate(endDate, endHour, endMinute);
 
         //exit function early if doesn't pass validation
-        if(isOutsideBusinessHours(start, end) || hasCustomerOverlap(aptID, customerID, start, end)) {
+        if(isOutsideBusinessHours(start, end) ||
+                hasCustomerOverlap(aptID, customerID, start, end) ||
+                isEmpty(title) || isEmpty(description) || isEmpty(location) || isEmpty(type)) {
             return false;
         }
 
