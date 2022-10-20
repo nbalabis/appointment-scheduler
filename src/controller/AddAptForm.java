@@ -17,6 +17,11 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Controller logic for Add Appointment Form.
+ *
+ * @author Nicholas Balabis
+ */
 public class AddAptForm implements Initializable {
     public TextField titleInput;
     public TextField descriptionInput;
@@ -32,6 +37,12 @@ public class AddAptForm implements Initializable {
     public ChoiceBox<Integer> customerIDPicker;
     public ChoiceBox<Integer> userIDPicker;
 
+    /**
+     * Initializes controller.
+     *
+     * @param url url.
+     * @param resourceBundle resourceBundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set time pickers
@@ -55,6 +66,14 @@ public class AddAptForm implements Initializable {
         userIDPicker.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Passes input values to appointment creation function when submit button is clicked.
+     *
+     * @param actionEvent 'Create New Appointment' button clicked.
+     * @throws IOException Throws IOException.
+     * @throws SQLException Throws SQLException.
+     * @throws ParseException Throws ParseException.
+     */
     public void onCreateNewAppt(ActionEvent actionEvent) throws IOException, SQLException, ParseException {
         //collect all input values
         String title = titleInput.getText();
@@ -74,14 +93,17 @@ public class AddAptForm implements Initializable {
         //pass values through to creation function
         boolean successfulAdd = Appointment.add(title, description, location, type, contactID, startDate, startHour, startMinute, endDate, endHour, endMinute, customerID, userID);
 
-        if(successfulAdd) {
-            //return to appointment page
-            SceneSwitcher.toAppts(actionEvent);
-        }
+        //return to apts page
+        if(successfulAdd) SceneSwitcher.toAppts(actionEvent);
     }
 
+    /**
+     * Returns to appointments page if cancel button is clicked.
+     *
+     * @param actionEvent 'Cancel' button clicked.
+     * @throws IOException Throws IOException.
+     */
     public void onCancel(ActionEvent actionEvent) throws IOException {
-        //return to appointments page
         SceneSwitcher.toAppts(actionEvent);
     }
 }

@@ -92,7 +92,7 @@ public class SceneSwitcher {
 
         //pass appt ID to controller
         EditAptForm controller = loader.getController();
-        controller.setApptData(apptID);
+        controller.setAptData(apptID);
 
         //show stage
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();

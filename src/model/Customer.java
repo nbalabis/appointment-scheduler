@@ -71,4 +71,10 @@ public class Customer {
 
         return true;
     }
+
+    public static ResultSet getAll() throws SQLException {
+        String sql = "SELECT Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID FROM customers;";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        return ps.executeQuery();
+    }
 }

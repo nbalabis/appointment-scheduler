@@ -2,8 +2,6 @@ package controller;
 
 import helper.JDBC;
 import helper.SceneSwitcher;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import model.Customer;
+import model.Division;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,6 +18,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import static model.Division.getID;
+
+/**
+ * Controller Logic for Add Customer Form.
+ *
+ * @author Nicholas Balabis
+ */
 public class AddCustomerForm implements Initializable {
     public TextField customerNameInput;
     public TextField addressInput;
@@ -27,39 +33,20 @@ public class AddCustomerForm implements Initializable {
     public ChoiceBox<String> countryPicker;
     public ChoiceBox<String> divisionPicker;
 
-    public void onCancel(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toCustomers(actionEvent);
-    }
-
-    public void onCreateNewCustomer(ActionEvent actionEvent) throws SQLException, IOException {
-        //collect all input values
-        String customerName = customerNameInput.getText();
-        String address = addressInput.getText();
-        String postalCode = postalCodeInput.getText();
-        String phone = phoneInput.getText();
-        Integer divisionID = getDivisionID(divisionPicker.getValue());
-
-        //pass values through to function
-        boolean successfulAdd = Customer.add(customerName, address, postalCode, phone, divisionID);
-
-        //return to customers page
-        if(successfulAdd) SceneSwitcher.toCustomers(actionEvent);
-    }
-
-    public Integer getDivisionID(String division) throws SQLException {
-        String sql = "SELECT Division_ID FROM first_level_divisions WHERE Division = \"" + division + "\";";
-        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ResultSet result = ps.executeQuery();
-        result.next();
-        return result.getInt("Division_ID");
-    }
-
+    /**
+     * Initializes controller. Includes a lambda expression at the countryPicker event listener.
+     *
+     * @param url url.
+     * @param resourceBundle resourceBundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //set country picker
         ObservableList<String> countryList = FXCollections.observableArrayList("Canada", "United Kingdom", "United States");
         countryPicker.setItems(countryList);
-        //LAMBDA EXPRESSION
+        //LAMBDA EXPRESSION - set divisionPicker based on country selection
         countryPicker.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> {
+            //get country selection
             String countryChoice = countryPicker.getItems().get((Integer) t1);
             Integer countryID = null;
             switch (countryChoice) {
@@ -74,11 +61,11 @@ public class AddCustomerForm implements Initializable {
                     break;
             }
 
-            String sql = "SELECT * FROM first_level_divisions WHERE Country_ID = " + countryID;
+            //set division picker based on selection
+
             ObservableList<String> divisionList = FXCollections.observableArrayList();
             try {
-                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-                ResultSet result = ps.executeQuery();
+                ResultSet result = Division.getAllInCountry(countryID);
                 while(result.next()) {
                     divisionList.add(result.getString("Division"));
                 }
@@ -96,4 +83,35 @@ public class AddCustomerForm implements Initializable {
         divisionPicker.getSelectionModel().selectFirst();
     }
 
+    /**
+     * Passes input values to customer creation function when submit button is clicked.
+     *
+     * @param actionEvent 'Create New Customer' button clicked.
+     * @throws SQLException Throws SQLException.
+     * @throws IOException Throws IOException.
+     */
+    public void onCreateNewCustomer(ActionEvent actionEvent) throws SQLException, IOException {
+        //collect all input values
+        String customerName = customerNameInput.getText();
+        String address = addressInput.getText();
+        String postalCode = postalCodeInput.getText();
+        String phone = phoneInput.getText();
+        Integer divisionID = getID(divisionPicker.getValue());
+
+        //pass values through to function
+        boolean successfulAdd = Customer.add(customerName, address, postalCode, phone, divisionID);
+
+        //return to customers page
+        if(successfulAdd) SceneSwitcher.toCustomers(actionEvent);
+    }
+
+    /**
+     * Returns to customers page if cancel button is clicked.
+     *
+     * @param actionEvent 'Cancel' button clicked.
+     * @throws IOException Throws IOEXception.
+     */
+    public void onCancel(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toCustomers(actionEvent);
+    }
 }

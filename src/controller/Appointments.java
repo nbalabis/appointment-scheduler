@@ -1,6 +1,5 @@
 package controller;
 
-import helper.JDBC;
 import helper.SceneSwitcher;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,7 +12,6 @@ import model.AppointmentsTable;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -23,6 +21,11 @@ import java.util.ResourceBundle;
 
 import static helper.TimeConversion.UTCToLocal;
 
+/**
+ * Controller for Appointments page.
+ *
+ * @author Nicholas Balabis
+ */
 public class Appointments implements Initializable {
     public TableView<model.AppointmentsTable> appointmentsTable;
     public TableColumn<model.AppointmentsTable, Integer> col_apptID;
@@ -43,13 +46,18 @@ public class Appointments implements Initializable {
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
 
+    /**
+     * Initializes controller. Contains 2 lambda expressions at the appointmentsTable event listener and radio button group listener.
+     *
+     * @param url url.
+     * @param resourceBundle resourceBundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set Appointment table initially
         setAptTableAll();
 
-        //enable editApptButton and deleteAptButton when an appt is selected
-        //LAMBDA EXPRESSION
+        //LAMBDA EXPRESSION - enable editAptButton and deleteAptButton when an apt is selected
         appointmentsTable.getSelectionModel().selectedItemProperty().addListener((observableValue, appointmentsTable, t1) -> {
             editAptButton.setDisable(false);
             deleteAptButton.setDisable(false);
@@ -62,8 +70,7 @@ public class Appointments implements Initializable {
         allViewRadioBtn.setToggleGroup(aptViewGroup);
         allViewRadioBtn.setSelected(true);
 
-        //create radio btn group listener
-        //LAMBDA EXPRESSION
+        //LAMBDA EXPRESSION - create radio btn group listener
         aptViewGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
             RadioButton selected = (RadioButton) aptViewGroup.getSelectedToggle();
             switch (selected.getId()) {
@@ -80,82 +87,93 @@ public class Appointments implements Initializable {
         });
     }
 
-    public void onAddAppt(ActionEvent actionEvent) throws IOException {
-        //switch to Add Appt Form
+    /**
+     * Switches to AddAptForm when the add button is clicked.
+     *
+     * @param actionEvent 'New Appointment' button clicked.
+     * @throws IOException Throws IOException.
+     */
+    public void onAddApt(ActionEvent actionEvent) throws IOException {
         SceneSwitcher.toAddApptForm(actionEvent);
     }
 
-    public void onEditAppt(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
-        //get selected appt
+    /**
+     * Switches to EditAptForm and passes selected appointment when edit button is clicked.
+     *
+     * @param actionEvent 'Edit Appointment' button clicked.
+     * @throws SQLException Throws SQLException.
+     * @throws IOException Throws IOException.
+     * @throws ParseException Throws ParseException.
+     */
+    public void onEditApt(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
+        //get selected apt
         AppointmentsTable selectedAppt = appointmentsTable.getSelectionModel().getSelectedItem();
-        Integer apptID = selectedAppt.getApptID();
+        Integer aptID = selectedAppt.getApptID();
 
-        //switch to appt editing screen and pass appt ID
-        SceneSwitcher.toEditAppt(actionEvent, apptID);
+        //switch to appt editing screen and pass apt ID
+        SceneSwitcher.toEditAppt(actionEvent, aptID);
     }
 
-    public void onDeleteAppt(ActionEvent actionEvent) throws SQLException {
-        //get selected appt
+    /**
+     * Passes appointment ID to delete function when delete button is clicked.
+     *
+     * @param actionEvent 'Delete Appointment' button clicked.
+     * @throws SQLException Throws SQLException.
+     */
+    public void onDeleteApt(ActionEvent actionEvent) throws SQLException {
+        //get selected apt
         AppointmentsTable selectedApt = appointmentsTable.getSelectionModel().getSelectedItem();
+        Integer aptID = selectedApt.getApptID();
 
-        Integer apptID = selectedApt.getApptID();
-
-        //delete from database
-        Appointment.delete(apptID);
+        //pass apt to delete function
+        Appointment.delete(aptID);
 
         //refresh table and buttons
         setAptTableAll();
         disableButtons();
     }
 
-    public void onLogout(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toLogin(actionEvent);
-    }
-
-    public void onSwitchToCustomer(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toCustomers(actionEvent);
-    }
-
+    /**
+     * Clears appointmentsTable and sets to view all appointments.
+     */
     public void setAptTableAll(){
         //clear out anything in table
         appointmentsTable.getItems().clear();
 
         //set table with database data
-        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
         try {
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ResultSet result =  ps.executeQuery();
-            addToObList(result);
+            addToObList(Appointment.getAll());
         } catch (SQLException | ParseException throwables) {
             throwables.printStackTrace();
         }
-
         setCellValueFactories();
         appointmentsTable.setItems(oblist);
     }
 
+    /**
+     * Clears appointmentsTable and sets to view appointments for this month.
+     */
     public void setAptTableMonthly(){
         //clear out anything in table
         appointmentsTable.getItems().clear();
+
+        //get current Month
         int currentYear = LocalDate.now().getYear();
         int currentMonth = LocalDate.now().getMonthValue();
 
         //set table with database data
-        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE YEAR(Start) = ? AND MONTH(Start) = ?;";
         try {
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ps.setInt(1, currentYear);
-            ps.setInt(2, currentMonth);
-            ResultSet result =  ps.executeQuery();
-            addToObList(result);
+            addToObList(Appointment.getForMonth(currentYear, currentMonth));
         } catch (SQLException | ParseException throwables) {
             throwables.printStackTrace();
         }
-
         setCellValueFactories();
         appointmentsTable.setItems(oblist);
     }
 
+    /**
+     * Clears appointmentsTable and sets to view appointments for this week.
+     */
     public void setAptTableWeekly(){
         //clear out anything in table
         appointmentsTable.getItems().clear();
@@ -163,25 +181,57 @@ public class Appointments implements Initializable {
         LocalDate oneWeekDate = LocalDate.now().plusWeeks(1);
 
         //set table with database data
-        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE Start BETWEEN ? AND ?;";
         try {
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ps.setString(1, String.valueOf(currentDate));
-            ps.setString(2, String.valueOf(oneWeekDate));
-            ResultSet result =  ps.executeQuery();
-            addToObList(result);
+            addToObList(Appointment.getForWeek(currentDate, oneWeekDate));
         } catch (SQLException | ParseException throwables) {
             throwables.printStackTrace();
         }
-
         setCellValueFactories();
         appointmentsTable.setItems(oblist);
     }
 
+    /**
+     * Switches to Customers screen when Customer button is clicked.
+     *
+     * @param actionEvent 'Customers' button clicked.
+     * @throws IOException Throws IOException.
+     */
+    public void onSwitchToCustomer(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toCustomers(actionEvent);
+    }
+
+    /**
+     * Switches to Reports screen when Reports button is clicked.
+     *
+     * @param actionEvent 'Reports' button clicked.
+     * @throws IOException Throws IOException.
+     */
+    public void onSwitchToReport(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toReports(actionEvent);
+    }
+
+    /**
+     * Switches to Login screen when Logout button is clicked
+     *
+     * @param actionEvent 'Logout' button clicked.
+     * @throws IOException Throws IOException.
+     */
+    public void onLogout(ActionEvent actionEvent) throws IOException {
+        SceneSwitcher.toLogin(actionEvent);
+    }
+
+    /**
+     * Iterates through SQL result and adds all records to an ObservableList.
+     *
+     * @param result ResultSet from a SQL query.
+     * @throws SQLException Throws SQLException.
+     * @throws ParseException Throws ParseException.
+     */
     private void addToObList(ResultSet result) throws SQLException, ParseException {
         //convert dates from UTC to Local
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+        //adds all records to observable list
         while(result.next()) {
             oblist.add(new AppointmentsTable(
                     result.getString("Title"),
@@ -198,6 +248,9 @@ public class Appointments implements Initializable {
         }
     }
 
+    /**
+     * Sets all CellValueFactories in appointmentsTable.
+     */
     private void setCellValueFactories() {
         col_apptID.setCellValueFactory(new PropertyValueFactory<>("apptID"));
         col_title.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -211,10 +264,9 @@ public class Appointments implements Initializable {
         col_contactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
     }
 
-    public void onSwitchToReport(ActionEvent actionEvent) throws IOException {
-        SceneSwitcher.toReports(actionEvent);
-    }
-
+    /**
+     * Disables edit and delete buttons.
+     */
     private void disableButtons() {
         editAptButton.setDisable(true);
         deleteAptButton.setDisable(true);

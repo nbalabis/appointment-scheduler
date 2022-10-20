@@ -35,7 +35,7 @@
             <Insets bottom="10.0" left="25.0" right="25.0" top="10.0" />
         </padding>
         <Button disable="true" mnemonicParsing="false" text="Customers" />
-        <Button mnemonicParsing="false" onAction="#onSwitchToAppt" text="Appointments" />
+        <Button mnemonicParsing="false" onAction="#onSwitchToApt" text="Appointments" />
         <Button layoutX="87.0" layoutY="10.0" mnemonicParsing="false" onAction="#onSwitchToReport" text="Reports" />
     </ToolBar>
     <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

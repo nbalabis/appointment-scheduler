@@ -31,9 +31,9 @@
             </columns>
         </TableView>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
-            <Button mnemonicParsing="false" onAction="#onAddAppt" text="New Appointment" />
-            <Button fx:id="editAptButton" disable="true" mnemonicParsing="false" onAction="#onEditAppt" text="Edit Appointment" />
-            <Button fx:id="deleteAptButton" disable="true" mnemonicParsing="false" onAction="#onDeleteAppt" text="Delete Appointment" />
+            <Button mnemonicParsing="false" onAction="#onAddApt" text="New Appointment" />
+            <Button fx:id="editAptButton" disable="true" mnemonicParsing="false" onAction="#onEditApt" text="Edit Appointment" />
+            <Button fx:id="deleteAptButton" disable="true" mnemonicParsing="false" onAction="#onDeleteApt" text="Delete Appointment" />
         </HBox>
     </VBox>
     <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

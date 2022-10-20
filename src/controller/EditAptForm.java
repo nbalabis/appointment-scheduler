@@ -1,6 +1,5 @@
 package controller;
 
-import helper.JDBC;
 import helper.SceneSwitcher;
 import helper.TimePicker;
 import javafx.event.ActionEvent;
@@ -13,7 +12,6 @@ import model.User;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -24,6 +22,11 @@ import java.util.ResourceBundle;
 import static helper.TimeConversion.UTCToLocal;
 import static helper.TimeConversion.formatDate;
 
+/**
+ * Controller for EditAptForm.
+ *
+ * @author Nicholas Balabis
+ */
 public class EditAptForm implements Initializable {
     public TextField titleInput;
     public TextField descriptionInput;
@@ -40,6 +43,12 @@ public class EditAptForm implements Initializable {
     public ChoiceBox<Integer> userIDPicker;
     public TextField apptIDInput;
 
+    /**
+     * Initializes controller.
+     *
+     * @param url url.
+     * @param resourceBundle resourceBundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set time pickers
@@ -58,11 +67,16 @@ public class EditAptForm implements Initializable {
         }
     }
 
-    public void setApptData(Integer apptID) throws SQLException, ParseException {
-        //populate Appt data
-        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Contact_ID, Start, End, Customer_ID, User_ID FROM appointments WHERE Appointment_ID = " + apptID;
-        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ResultSet result = ps.executeQuery();
+    /**
+     * Sets all input fields to values for selected appointment.
+     *
+     * @param aptID Appointment ID for selected appointment.
+     * @throws SQLException Throws SQLException.
+     * @throws ParseException Throws ParseException.
+     */
+    public void setAptData(Integer aptID) throws SQLException, ParseException {
+        //get selected appointment
+        ResultSet result = Appointment.getByID(aptID);
         result.next();
 
         //convert dates from UTC to Local
@@ -70,6 +84,7 @@ public class EditAptForm implements Initializable {
         String start = UTCToLocal(dateFormat.parse(result.getString("Start")));
         String end = UTCToLocal(dateFormat.parse(result.getString("End")));
 
+        //set all fields to database values
         apptIDInput.setText(String.valueOf(result.getInt("Appointment_ID")));
         titleInput.setText(result.getString("Title"));
         descriptionInput.setText(result.getString("Description"));
@@ -86,7 +101,15 @@ public class EditAptForm implements Initializable {
         userIDPicker.getSelectionModel().select(Integer.valueOf(result.getString("User_ID")));
     }
 
-    public void onUpdateAppt(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
+    /**
+     * Passes input values to the Appointment update function and switches back to the Appointments screen when save button is clicked.
+     *
+     * @param actionEvent 'Save' button clicked.
+     * @throws SQLException Throws SQLException.
+     * @throws IOException Throws IOException.
+     * @throws ParseException Throws ParseException.
+     */
+    public void onUpdateApt(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
         //collect all input values
         Integer apptID = Integer.valueOf(apptIDInput.getText());
         String title = titleInput.getText();
@@ -103,17 +126,20 @@ public class EditAptForm implements Initializable {
         Integer customerID = customerIDPicker.getValue();
         Integer userID = userIDPicker.getValue();
 
-//      pass values through to update function
+        //pass values through to update function
         boolean successfulUpdate = Appointment.update(apptID, title, description, location, type, contactID, startDate, startHour, startMinute, endDate, endHour, endMinute, customerID, userID);
 
-        if(successfulUpdate) {
-            //switch back to appts page
-            SceneSwitcher.toAppts(actionEvent);
-        }
+        //switch back to appointments page
+        if(successfulUpdate) SceneSwitcher.toAppts(actionEvent);
     }
 
+    /**
+     * Returns to the Appointments Page when the cancel button is clicked.
+     *
+     * @param actionEvent 'Cancel' button clicked.
+     * @throws IOException Throws IOException.
+     */
     public void onCancel(ActionEvent actionEvent) throws IOException {
-        //return to appointments page
         SceneSwitcher.toAppts(actionEvent);
     }
 

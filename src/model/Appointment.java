@@ -150,4 +150,32 @@ public class Appointment {
         }
         return types;
     }
+
+    public static ResultSet getAll() throws SQLException {
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        return ps.executeQuery();
+    }
+
+    public static ResultSet getForMonth(Integer currentYear, Integer currentMonth) throws SQLException {
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE YEAR(Start) = ? AND MONTH(Start) = ?;";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setInt(1, currentYear);
+        ps.setInt(2, currentMonth);
+        return  ps.executeQuery();
+    }
+
+    public static ResultSet getForWeek(LocalDate currentDate, LocalDate oneWeekDate) throws SQLException {
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE Start BETWEEN ? AND ?;";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ps.setString(1, String.valueOf(currentDate));
+        ps.setString(2, String.valueOf(oneWeekDate));
+        return  ps.executeQuery();
+    }
+
+    public static ResultSet getByID(Integer aptID) throws SQLException {
+        String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Contact_ID, Start, End, Customer_ID, User_ID FROM appointments WHERE Appointment_ID = " + aptID;
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        return ps.executeQuery();
+    }
 }
