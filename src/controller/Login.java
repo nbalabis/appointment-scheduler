@@ -20,6 +20,11 @@ import static helper.Validate.isValidUser;
 import static main.Main.CURRENT_USER_ID;
 import static model.Appointment.displayUpcomingApts;
 
+/**
+ * Controller for Login page.
+ *
+ * @author Nicholas Balabis
+ */
 public class Login implements Initializable {
     public TextField userName;
     public PasswordField password;
@@ -32,10 +37,19 @@ public class Login implements Initializable {
     String language = locale.getLanguage();
     ResourceBundle rb = ResourceBundle.getBundle("Nat", locale);
 
+    /**
+     * Initializes controller.
+     *
+     * @param url url.
+     * @param resourceBundle resourceBundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //get user's language
         ZoneId zone = ZoneId.systemDefault();
         userLocationLabel.setText("Location: " + zone);
+
+        //set text based on language
         if(language.equals("fr")) {
             usernameLabel.setText(rb.getString("usernameLabel"));
             passwordLabel.setText(rb.getString("passwordLabel"));
@@ -44,7 +58,16 @@ public class Login implements Initializable {
         }
     }
 
+    /**
+     * Validate user, log activity, and switch scenes when login button is clicked.
+     *
+     * @param actionEvent 'Log In' button clicked.
+     * @throws SQLException Throws SQLException.
+     * @throws IOException Throws IOException.
+     * @throws ParseException Throws ParseException.
+     */
     public void onLoginAction(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
+        //validate user/password
         String userNameInput = userName.getText();
         String passwordInput = password.getText();
         boolean successfulLogin = isValidUser(userNameInput, passwordInput, language, rb);
@@ -59,6 +82,7 @@ public class Login implements Initializable {
         }
     }
 
+    //set up logger
     private static final Logger logger = java.util.logging.Logger.getLogger("LoginActivity");
     static {
         try {

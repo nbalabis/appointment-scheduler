@@ -62,7 +62,6 @@ public class AddCustomerForm implements Initializable {
             }
 
             //set division picker based on selection
-
             ObservableList<String> divisionList = FXCollections.observableArrayList();
             try {
                 ResultSet result = Division.getAllInCountry(countryID);

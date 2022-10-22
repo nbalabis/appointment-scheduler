@@ -2,9 +2,6 @@ package controller;
 
 import helper.JDBC;
 import helper.SceneSwitcher;
-import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,6 +26,11 @@ import java.util.ResourceBundle;
 import static helper.TimeConversion.UTCToLocal;
 import static main.Main.CURRENT_USER_ID;
 
+/**
+ * Controller for Reports page.
+ *
+ * @author Nicholas Balabis
+ */
 public class Reports implements Initializable {
     public Label choiceBoxLabel;
     public ChoiceBox<String> choiceBox;
@@ -50,6 +52,12 @@ public class Reports implements Initializable {
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
 
+    /**
+     * Initializes controller. Contains 2 lambda expressions at reportViewGroup radio button listener and choiceBox listener.
+     *
+     * @param url url.
+     * @param resourceBundle resourceBundle.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set initial view
@@ -63,8 +71,7 @@ public class Reports implements Initializable {
         viewPersonalRadioBtn.setToggleGroup(reportViewGroup);
         viewByTypeRadioBtn.setSelected(true);
 
-        //create radio btn group listener
-        //LAMBDA EXPRESSION
+        //LAMBDA EXPRESSION - set choiceBox based on view selected
         reportViewGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
             RadioButton selected = (RadioButton) reportViewGroup.getSelectedToggle();
             //determine which radio button is selected
@@ -93,8 +100,7 @@ public class Reports implements Initializable {
             }
         });
 
-        //create choicebox listener
-        //LAMBDA EXPRESSION
+        //LAMBDA EXPRESSION - set table based on choicebox selected filter
         choiceBox.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> {
             //clear out anything in table
             reportsTable.getItems().clear();
@@ -103,8 +109,8 @@ public class Reports implements Initializable {
             RadioButton selected = (RadioButton) reportViewGroup.getSelectedToggle();
             String selectedItem = choiceBox.getItems().get((Integer) t1);
 
+            //set table to that filter
             switch (selected.getId()) {
-                //set table to that filter
                 case "viewByTypeRadioBtn":
                     setReportsTableViewByType(selectedItem);
                     break;
@@ -118,25 +124,42 @@ public class Reports implements Initializable {
         });
     }
 
-    //Switch to Customers Screen
+    /**
+     * Switch to Customers screen when button is clicked.
+     *
+     * @param actionEvent 'Customers' button clicked.
+     * @throws IOException Throws IOException.
+     */
     public void onSwitchToCustomer(ActionEvent actionEvent) throws IOException {
         SceneSwitcher.toCustomers(actionEvent);
     }
 
-    //Switch to Appointments Screen
+    /**
+     *
+     * Switch to Appointments screen when button is clicked.
+     * @param actionEvent 'Appointments' button clicked.
+     * @throws IOException Throws IOException.
+     */
     public void onSwitchToApt(ActionEvent actionEvent) throws IOException {
         SceneSwitcher.toAppts(actionEvent);
     }
 
-    //Log user out and return to login screen
+    /**
+     *
+     * Switch to Login screen when button is clicked.
+     * @param actionEvent 'Logout' button clicked.
+     * @throws IOException Throws IOException
+     */
     public void onLogout(ActionEvent actionEvent) throws IOException {
         SceneSwitcher.toLogin(actionEvent);
     }
 
+    /**
+     * Set choiceBox to display all appointment types
+     */
     private void setChoiceBoxTypes() {
-        ObservableList<String> types = FXCollections.observableArrayList();
-        
         //get all distinct apt types
+        ObservableList<String> types = FXCollections.observableArrayList();
         try {
             types = Appointment.getTypes();
         } catch (SQLException throwables) {
@@ -148,6 +171,9 @@ public class Reports implements Initializable {
         choiceBoxLabel.setText("Type");
     }
 
+    /**
+     * Set choiceBox to display all months
+     */
     private void setChoiceBoxMonths() {
         ObservableList<String> months = FXCollections.observableArrayList();
         months.addAll("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
@@ -155,7 +181,9 @@ public class Reports implements Initializable {
         choiceBoxLabel.setText("Month");
     }
 
-    //Set the choice box to display all contacts
+    /**
+     * Set choiceBox to display all contacts
+     */
     private void setChoiceBoxContacts() {
         //get all contacts from database
         ObservableList<String> contacts = FXCollections.observableArrayList();
@@ -170,9 +198,13 @@ public class Reports implements Initializable {
         choiceBoxLabel.setText("Contact Name");
     }
 
-    //Set the reports table to View appointments by type
+    /**
+     * Set the reports table to View appointments by type
+     *
+     * @param selectedType Type of appointment selected.
+     */
     private void setReportsTableViewByType(String selectedType) {
-        //set table with database data
+        //get data from database
         String sql = "SELECT * FROM appointments WHERE Type = ?;";
         try {
             PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -183,11 +215,16 @@ public class Reports implements Initializable {
             throwables.printStackTrace();
         }
 
+        //set table
         setCellValueFactories();
         reportsTable.setItems(oblist);
     }
 
-    //Set the reports table to view appointments by month
+    /**
+     * Set the reports table to view appointments by month.
+     *
+     * @param month Month selected.
+     */
     private void setReportsTableViewByMonth(String month) {
         //convert Month to integer
         int selectedMonth = 0;
@@ -236,7 +273,7 @@ public class Reports implements Initializable {
         calendar.setTime(currentDate);
         int currentYear = calendar.get(Calendar.YEAR);
 
-        //set table with database data
+        //get data from database
         String sql = "SELECT * FROM appointments WHERE MONTH(Start) = ? AND YEAR(START) = ?;";
         try {
             PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -248,11 +285,16 @@ public class Reports implements Initializable {
             throwables.printStackTrace();
         }
 
+        //set table with database data
         setCellValueFactories();
         reportsTable.setItems(oblist);
     }
 
-    //Set the reports table to filter by selected contact name
+    /**
+     * Set the reports table to filter by selected contact name.
+     *
+     * @param name Selected contact name.
+     */
     private void setReportsTableViewByContact(String name) {
         //get data from database
         String sql = "SELECT * FROM appointments JOIN contacts ON appointments.Contact_ID = contacts.Contact_ID WHERE contacts.Contact_Name = ?;";
@@ -265,11 +307,14 @@ public class Reports implements Initializable {
             throwables.printStackTrace();
         }
 
+        //set table to database data
         setCellValueFactories();
         reportsTable.setItems(oblist);
     }
 
-    //Set the reports table to view current user's appointments
+    /**
+     * Set the reports table to view current user's appointments.
+     */
     private void setReportsTableViewPersonal() {
         //get data from database
         String sql = "SELECT * FROM appointments WHERE User_ID = ?;";
@@ -287,10 +332,18 @@ public class Reports implements Initializable {
         reportsTable.setItems(oblist);
     }
 
+    /**
+     * Add ResultSet to observable list.
+     *
+     * @param result resultSet from database.
+     * @throws SQLException Throws SQLException.
+     * @throws ParseException Throws ParseException.
+     */
     private void addToObList(ResultSet result) throws SQLException, ParseException {
         //convert dates from UTC to Local
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+        //add each column to new object in observable list
         while(result.next()) {
             oblist.add(new AppointmentsTable(
                     result.getString("Title"),
@@ -307,6 +360,9 @@ public class Reports implements Initializable {
         }
     }
 
+    /**
+     * Set cellValueFactories for table.
+     */
     private void setCellValueFactories() {
         col_apptID.setCellValueFactory(new PropertyValueFactory<>("apptID"));
         col_title.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -320,6 +376,11 @@ public class Reports implements Initializable {
         col_contactID.setCellValueFactory(new PropertyValueFactory<>("contactID"));
     }
 
+    /**
+     * Show/Hide ChoiceBox and ChoiceBoxLabel.
+     *
+     * @param view True/False value for choiceBox & label display.
+     */
     private void showChoices(boolean view) {
         choiceBox.setVisible(view);
         choiceBoxLabel.setVisible(view);
