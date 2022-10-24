@@ -13,7 +13,22 @@ import static helper.TimeConversion.localToEST;
 import static helper.TimeConversion.localToUTC;
 import static main.Main.CURRENT_USER_ID;
 
+/**
+ * Helpers for validating user submitted data.
+ *
+ * @author Nicholas Balabis
+ */
 public class Validate {
+    /**
+     * Checks if the username and password entered match database values
+     *
+     * @param userName Inputted userName.
+     * @param password Inputted password.
+     * @param language Current user's language.
+     * @param rb resourceBundle.
+     * @return True/False value indicating if the login was successful.
+     * @throws SQLException Throws SQLException.
+     */
     public static boolean isValidUser(String userName, String password, String language, ResourceBundle rb) throws SQLException {
         //search database for matching username and password
         String sql = "SELECT * FROM users WHERE User_Name = ? AND Password = ?;";
@@ -44,6 +59,14 @@ public class Validate {
         return isValid;
     }
 
+    /**
+     * Checks if a given start and end date are outside of business hours.
+     *
+     * @param start Appointment start date/time.
+     * @param end Appointment end date/time.
+     * @return True/False value indicating if an appointment occurs outside of business hours.
+     * @throws ParseException Throws ParseException.
+     */
     public static boolean isOutsideBusinessHours(Date start, Date end) throws ParseException {
         //convert to EST
         String startEST = localToEST(start);
@@ -66,15 +89,23 @@ public class Validate {
         return isOutsideHours;
     }
 
+    /**
+     * Determines if a customer's appointment overlaps with another appointment for the same customer.
+     *
+     * @param aptID The ID of the selected appointment.
+     * @param customerID The customer's ID.
+     * @param start The appointment start time.
+     * @param end The appointment end time.
+     * @return True/False value indicating whether or not there is an overlap.
+     * @throws SQLException Throws SQLException.
+     */
     public static boolean hasCustomerOverlap(Integer aptID, Integer customerID, Date start, Date end) throws SQLException {
-        //dates are in local time --db dates are in utc
         //convert dates to UTC
         String startUTC = localToUTC(start);
         String endUTC = localToUTC(end);
 
         //get all apts from database that match customer and fall between start and end
         String sql = "SELECT * FROM Appointments WHERE Customer_ID = ? AND Start BETWEEN ? AND ? OR End BETWEEN ? AND ?;";
-
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         ps.setInt(1, customerID);
         ps.setString(2, startUTC);
@@ -100,6 +131,12 @@ public class Validate {
         return hasOverlap;
     }
 
+    /**
+     * Checks if a given field has been left empty and displays relevant alert.
+     *
+     * @param field Input field to check.
+     * @return True/False value indicating if the field has been left empty.
+     */
     public static boolean isEmpty(String field) {
         //check if string is empty
         boolean emptyField = field.equals("");

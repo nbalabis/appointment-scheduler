@@ -17,8 +17,18 @@ import java.util.Objects;
 
 import static main.Main.CURRENT_USER_ID;
 
+/**
+ * Helper with scene-switching logic.
+ *
+ * @author Nicholas Balabis
+ */
 public class SceneSwitcher {
-
+    /**
+     * Switches to Appointments Screen.
+     *
+     * @param actionEvent actionEvent.
+     * @throws IOException Throws IOException.
+     */
     @FXML
     public static void toAppts(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/Appointments.fxml")));
@@ -29,6 +39,12 @@ public class SceneSwitcher {
         stage.show();
     }
 
+    /**
+     * Switches to Login Screen and resets CURRENT_USER_ID.
+     *
+     * @param actionEvent actionEvent.
+     * @throws IOException Throws IOException.
+     */
     @FXML
     public static void toLogin(ActionEvent actionEvent) throws IOException {
         CURRENT_USER_ID = null;
@@ -40,6 +56,12 @@ public class SceneSwitcher {
         stage.show();
     }
 
+    /**
+     * Switches to Customers Screen.
+     *
+     * @param actionEvent actionEvent.
+     * @throws IOException Throws IOException.
+     */
     @FXML
     public static void toCustomers(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/Customers.fxml")));
@@ -75,6 +97,12 @@ public class SceneSwitcher {
         stage.show();
     }
 
+    /**
+     * Switches to the Appointment creation form.
+     *
+     * @param actionEvent actionEvent.
+     * @throws IOException Throws IOException.
+     */
     @FXML
     public static void toAddApptForm(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/AddApptForm.fxml")));
@@ -85,14 +113,21 @@ public class SceneSwitcher {
         stage.show();
     }
 
+    /**
+     * Switches to Appointment update form and passes selected Apt ID.
+     *
+     * @param actionEvent actionEvent.
+     * @param aptID ID for selected appointment.
+     * @throws IOException Throws IOException.
+     */
     @FXML
-    public static void toEditAppt(ActionEvent actionEvent, Integer apptID) throws IOException, SQLException, ParseException {
+    public static void toEditAppt(ActionEvent actionEvent, Integer aptID) throws IOException, SQLException, ParseException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/EditApptForm.fxml")));
         Parent root = loader.load();
 
-        //pass appt ID to controller
+        //pass apt ID to controller
         EditAptForm controller = loader.getController();
-        controller.setAptData(apptID);
+        controller.setAptData(aptID);
 
         //show stage
         Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -102,6 +137,12 @@ public class SceneSwitcher {
         stage.show();
     }
 
+    /**
+     * Switches to Reports Screen.
+     *
+     * @param actionEvent actionEvent.
+     * @throws IOException Throws IOException.
+     */
     @FXML
     public static void toReports(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(SceneSwitcher.class.getResource("/view/Reports.fxml")));
