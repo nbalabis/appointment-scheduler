@@ -108,7 +108,7 @@ public class Appointments implements Initializable {
     public void onEditApt(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
         //get selected apt
         AppointmentsTable selectedAppt = appointmentsTable.getSelectionModel().getSelectedItem();
-        Integer aptID = selectedAppt.getApptID();
+        Integer aptID = selectedAppt.getAptID();
 
         //switch to appt editing screen and pass apt ID
         SceneSwitcher.toEditAppt(actionEvent, aptID);
@@ -123,7 +123,7 @@ public class Appointments implements Initializable {
     public void onDeleteApt(ActionEvent actionEvent) throws SQLException {
         //get selected apt
         AppointmentsTable selectedApt = appointmentsTable.getSelectionModel().getSelectedItem();
-        Integer aptID = selectedApt.getApptID();
+        Integer aptID = selectedApt.getAptID();
 
         //pass apt to delete function
         Appointment.delete(aptID);

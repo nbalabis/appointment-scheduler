@@ -8,21 +8,40 @@ import javafx.scene.control.Alert;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import static helper.TimeConversion.*;
 import static helper.Validate.*;
 
+/**
+ * Appointment Model.
+ *
+ * @author Nicholas Balabis
+ */
 public class Appointment {
+    /**
+     * Collects and validates input values before creating a new appointment in the database.
+     *
+     * @param title Appointment title.
+     * @param description Appointment description.
+     * @param location Appointment location.
+     * @param type Appointment type.
+     * @param contactID Appointment contactID.
+     * @param startDate Appointment start date.
+     * @param startHour Appointment start hour.
+     * @param startMinute Appointment start minute.
+     * @param endDate Appointment end date.
+     * @param endHour Appointment end hour.
+     * @param endMinute Appointment end minute.
+     * @param customerID Appointment customer ID.
+     * @param userID Appointment User ID.
+     * @return True/False value indicating whether or not the appointment add was successful.
+     * @throws SQLException Throws SQLException.
+     * @throws ParseException Throws ParseException.
+     */
     public static boolean add(String title, String description, String location, String type, Integer contactID, LocalDate startDate, Integer startHour, Integer startMinute, LocalDate endDate, Integer endHour, Integer endMinute, Integer customerID, Integer userID) throws SQLException, ParseException {
         //convert data to date
         Date start = convertToDate(startDate, startHour, startMinute);
@@ -56,6 +75,27 @@ public class Appointment {
         return true;
     }
 
+    /**
+     * Collects and validates input values before updating an existing appointment in the database.
+     *
+     * @param aptID Appointment ID.
+     * @param title Appointment title.
+     * @param description Appointment description.
+     * @param location Appointment location.
+     * @param type Appointment type.
+     * @param contactID Appointment contactID.
+     * @param startDate Appointment start date.
+     * @param startHour Appointment start hour.
+     * @param startMinute Appointment start minute.
+     * @param endDate Appointment end date.
+     * @param endHour Appointment end hour.
+     * @param endMinute Appointment end minute.
+     * @param customerID Appointment customer ID.
+     * @param userID Appointment User ID.
+     * @return True/False value indicating whether or not the appointment update was successful.
+     * @throws SQLException Throws SQLException.
+     * @throws ParseException Throws ParseException.
+     */
     public static boolean update(Integer aptID, String title, String description, String location, String type, Integer contactID, LocalDate startDate, Integer startHour, Integer startMinute, LocalDate endDate, Integer endHour, Integer endMinute, Integer customerID, Integer userID) throws SQLException, ParseException {
         //convert data to date
         Date start = convertToDate(startDate, startHour, startMinute);
@@ -90,14 +130,27 @@ public class Appointment {
         return true;
     }
 
-    public static void delete(Integer apptID) throws SQLException {
-        //find and delete appt from database
+    /**
+     * Deletes an appointment from the database.
+     *
+     * @param aptID ID of appointment to delete.
+     * @throws SQLException Throws SQLException.
+     */
+    public static void delete(Integer aptID) throws SQLException {
+        //find and delete apt from database
         String sql = "DELETE FROM appointments WHERE Appointment_ID = ?";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-        ps.setInt(1, apptID);
+        ps.setInt(1, aptID);
         ps.executeUpdate();
     }
 
+    /**
+     * Displays any upcoming appointments for a specified user.
+     *
+     * @param userID User ID to check appointments for.
+     * @throws SQLException Throws SQLException.
+     * @throws ParseException Throws ParseException.
+     */
     public static void displayUpcomingApts(Integer userID) throws SQLException, ParseException {
         //get current time and current time + 15
         Date currentTime = new Date();
@@ -140,6 +193,12 @@ public class Appointment {
         }
     }
 
+    /**
+     * Gets all distinct appointment types from database.
+     *
+     * @return An observableList of appointment types.
+     * @throws SQLException Throws SQLException.
+     */
     public static ObservableList<String> getTypes() throws SQLException {
         String sql = "SELECT DISTINCT Type FROM appointments;";
         ObservableList<String> types = FXCollections.observableArrayList();
@@ -151,12 +210,26 @@ public class Appointment {
         return types;
     }
 
+    /**
+     * Gets all appointments in database.
+     *
+     * @return A ResultSet containing all appointments in the database.
+     * @throws SQLException Throws SQLException.
+     */
     public static ResultSet getAll() throws SQLException {
         String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
         return ps.executeQuery();
     }
 
+    /**
+     * Gets all appointments occurring this month.
+     *
+     * @param currentYear Integer representing the current year.
+     * @param currentMonth Integer representing the current month.
+     * @return ResultSet containing all appointments that occur this month.
+     * @throws SQLException Throws SQLException.
+     */
     public static ResultSet getForMonth(Integer currentYear, Integer currentMonth) throws SQLException {
         String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE YEAR(Start) = ? AND MONTH(Start) = ?;";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -165,6 +238,14 @@ public class Appointment {
         return  ps.executeQuery();
     }
 
+    /**
+     * Gets all appointments that occur within the next week.
+     *
+     * @param currentDate The current date.
+     * @param oneWeekDate The date one week from today.
+     * @return ResultSet containing all appointments that occur within the next week.
+     * @throws SQLException Throws SQLException.
+     */
     public static ResultSet getForWeek(LocalDate currentDate, LocalDate oneWeekDate) throws SQLException {
         String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID FROM appointments WHERE Start BETWEEN ? AND ?;";
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);
@@ -173,6 +254,13 @@ public class Appointment {
         return  ps.executeQuery();
     }
 
+    /**
+     * Get a specific appointment.
+     *
+     * @param aptID Appointment ID to match in database.
+     * @return ResultSet containing the appointment.
+     * @throws SQLException Throws SQLException.
+     */
     public static ResultSet getByID(Integer aptID) throws SQLException {
         String sql = "SELECT Appointment_ID, Title, Description, Location, Type, Contact_ID, Start, End, Customer_ID, User_ID FROM appointments WHERE Appointment_ID = " + aptID;
         PreparedStatement ps = JDBC.connection.prepareStatement(sql);

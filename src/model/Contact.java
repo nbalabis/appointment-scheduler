@@ -8,7 +8,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Contact model.
+ *
+ * @author Nicholas Balabis
+ */
 public class Contact {
+    /**
+     * Get all contact IDs from database.
+     *
+     * @return Observablelist of all contact IDs.
+     * @throws SQLException Throws SQLException.
+     */
     public static ObservableList<Integer> getAllIDs() throws SQLException {
         String sql = "SELECT * FROM contacts";
         ObservableList<Integer> IDs = FXCollections.observableArrayList();
@@ -20,7 +31,12 @@ public class Contact {
         return IDs;
     }
 
-    //Return a list of all contact names
+    /**
+     * Returns a list of all contact names.
+     *
+     * @return Observable List containing all contact names.
+     * @throws SQLException Throws SQLException.
+     */
     public static ObservableList<String> getAllNames() throws SQLException {
         //Get all names from database
         String sql = "SELECT Contact_Name FROM contacts;";

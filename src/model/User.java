@@ -8,7 +8,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * User model.
+ *
+ * @author Nicholas Balabis
+ */
 public class User {
+    /**
+     * Gets all user IDs.
+     *
+     * @return Observable List containing all user IDs.
+     * @throws SQLException Throws SQLException.
+     */
     public static ObservableList<Integer> getAllIDs() throws SQLException {
         String sql = "SELECT * FROM users";
         ObservableList<Integer> IDs = FXCollections.observableArrayList();

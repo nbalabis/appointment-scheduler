@@ -1,11 +1,30 @@
 package model;
 
+/**
+ * A model of the Appointments Table to use when filling out table.
+ *
+ * @author Nicholas Balabis
+ */
 public class AppointmentsTable {
     String title, description, location, type, start, end;
-    Integer apptID, customerID, userID, contactID;
+    Integer aptID, customerID, userID, contactID;
 
-    public AppointmentsTable(String title, String description, String location, String type, String start, String end, Integer apptID, Integer customerID, Integer userID, Integer contactID){
-        this.apptID = apptID;
+    /**
+     * AppointmentsTable constructor.
+     *
+     * @param title Appointment Title.
+     * @param description Appointment description.
+     * @param location Appointment location.
+     * @param type Appointment type.
+     * @param start Appointment start date/time.
+     * @param end Appointment end date/time.
+     * @param aptID Appointment ID.
+     * @param customerID Customer ID.
+     * @param userID User ID.
+     * @param contactID Contact ID.
+     */
+    public AppointmentsTable(String title, String description, String location, String type, String start, String end, Integer aptID, Integer customerID, Integer userID, Integer contactID){
+        this.aptID = aptID;
         this.title = title;
         this.description = description;
         this.location = location;
@@ -65,12 +84,12 @@ public class AppointmentsTable {
         this.end = end;
     }
 
-    public Integer getApptID() {
-        return apptID;
+    public Integer getAptID() {
+        return aptID;
     }
 
-    public void setApptID(Integer apptID) {
-        this.apptID = apptID;
+    public void setAptID(Integer aptID) {
+        this.aptID = aptID;
     }
 
     public Integer getCustomerID() {

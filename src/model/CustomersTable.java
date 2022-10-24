@@ -1,9 +1,24 @@
 package model;
 
+/**
+ * A model of the Customers Table to use when filling out table.
+ *
+ * @author Nicholas Balabis
+ */
 public class CustomersTable {
     String customerName, address, postalCode, phone;
     Integer customerID, divisionID;
 
+    /**
+     * CustomersTable constructor.
+     *
+     * @param customerName Customer name.
+     * @param address Customer address.
+     * @param postalCode Customer postal code.
+     * @param phone Customer phone number
+     * @param customer_ID Customer ID.
+     * @param divisionID Customer division ID.
+     */
     public CustomersTable(String customerName, String address, String postalCode, String phone, Integer customer_ID, Integer divisionID) {
         this.customerName = customerName;
         this.address = address;
