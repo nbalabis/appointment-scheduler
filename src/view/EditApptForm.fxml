@@ -92,10 +92,8 @@
                   GridPane.rowIndex="7">
                 <DatePicker fx:id="endDateSelector"/>
                 <HBox prefHeight="100.0" prefWidth="200.0">
-                    <children>
-                        <Spinner fx:id="endHourPicker"/>
-                        <Spinner fx:id="endMinutePicker" layoutX="10.0" layoutY="10.0"/>
-                    </children>
+                    <Spinner fx:id="endHourPicker"/>
+                    <Spinner fx:id="endMinutePicker" layoutX="10.0" layoutY="10.0"/>
                 </HBox>
             </HBox>
             <Label text="End:" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
@@ -124,7 +122,7 @@
                     <Insets right="25.0"/>
                 </GridPane.margin>
             </Label>
-            <TextField fx:id="apptIDInput" disable="true" layoutX="310.0" layoutY="51.0"
+            <TextField fx:id="aptIDInput" disable="true" layoutX="310.0" layoutY="51.0"
                        GridPane.columnIndex="1"/>
         </GridPane>
         <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="100.0">
