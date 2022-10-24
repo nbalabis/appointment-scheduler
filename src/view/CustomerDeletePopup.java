@@ -11,9 +11,17 @@ import model.Customer;
 
 import java.sql.SQLException;
 
+/**
+ * Popup window to confirm customer deletion.
+ *
+ * @author Nicholas Balabis
+ */
 public class CustomerDeletePopup {
-
-
+    /**
+     * Display popup window and delete customer if confirmed. Contains 2 lambda expressions at the action handles for delete and cancel buttons.
+     *
+     * @param customerID Customer ID to be deleted.
+     */
     public static void display(Integer customerID)
     {
         Stage popupwindow=new Stage();
@@ -25,9 +33,9 @@ public class CustomerDeletePopup {
         Button deleteButton = new Button("Delete");
         Button cancelButton= new Button("Cancel");
 
-        //LAMBDA EXPRESSION
+        //LAMBDA EXPRESSION - close popup window when 'cancel' is clicked.
         cancelButton.setOnAction(e -> popupwindow.close());
-        //LAMBDA EXPRESSION
+        //LAMBDA EXPRESSION - delete customer if user confirms warning.
         deleteButton.setOnAction(e ->{
             //delete customer
             try {
