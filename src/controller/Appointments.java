@@ -252,7 +252,7 @@ public class Appointments implements Initializable {
      * Sets all CellValueFactories in appointmentsTable.
      */
     private void setCellValueFactories() {
-        col_apptID.setCellValueFactory(new PropertyValueFactory<>("apptID"));
+        col_apptID.setCellValueFactory(new PropertyValueFactory<>("aptID"));
         col_title.setCellValueFactory(new PropertyValueFactory<>("title"));
         col_description.setCellValueFactory(new PropertyValueFactory<>("description"));
         col_location.setCellValueFactory(new PropertyValueFactory<>("location"));

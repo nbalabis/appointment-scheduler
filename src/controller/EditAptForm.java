@@ -41,7 +41,7 @@ public class EditAptForm implements Initializable {
     public Spinner<Integer> endMinutePicker;
     public ChoiceBox<Integer> customerIDPicker;
     public ChoiceBox<Integer> userIDPicker;
-    public TextField apptIDInput;
+    public TextField aptIDInput;
 
     /**
      * Initializes controller.
@@ -85,7 +85,7 @@ public class EditAptForm implements Initializable {
         String end = UTCToLocal(dateFormat.parse(result.getString("End")));
 
         //set all fields to database values
-        apptIDInput.setText(String.valueOf(result.getInt("Appointment_ID")));
+        aptIDInput.setText(String.valueOf(result.getInt("Appointment_ID")));
         titleInput.setText(result.getString("Title"));
         descriptionInput.setText(result.getString("Description"));
         locationInput.setText(result.getString("Location"));
@@ -111,7 +111,7 @@ public class EditAptForm implements Initializable {
      */
     public void onUpdateApt(ActionEvent actionEvent) throws SQLException, IOException, ParseException {
         //collect all input values
-        Integer apptID = Integer.valueOf(apptIDInput.getText());
+        Integer apptID = Integer.valueOf(aptIDInput.getText());
         String title = titleInput.getText();
         String description = descriptionInput.getText();
         String location = locationInput.getText();
