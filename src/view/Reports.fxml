@@ -12,23 +12,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.layout.StackPane?>
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Reports">
     <VBox prefWidth="800.0" spacing="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <padding>
             <Insets bottom="50.0" left="25.0" right="25.0" top="65.0" />
         </padding>
         <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
-            <Label fx:id="choiceBoxLabel" text="Type" />
+            <Label fx:id="choiceBoxLabel" text="Contact" />
             <ChoiceBox fx:id="choiceBox" prefWidth="150.0" />
-           <HBox alignment="CENTER_RIGHT" prefWidth="555.0" spacing="25.0">
+           <HBox alignment="CENTER_RIGHT" prefWidth="535.0" spacing="25.0">
                <Label text="View Appointment Report:" />
-               <RadioButton fx:id="viewByTypeRadioBtn" mnemonicParsing="false" text="By Type" />
-               <RadioButton fx:id="viewByMonthRadioBtn" mnemonicParsing="false" text="By Month" />
+               <RadioButton fx:id="viewByMonthTypeRadioBtn" mnemonicParsing="false" text="By Month/Type" />
             <RadioButton fx:id="viewByContactRadioBtn" layoutX="452.0" layoutY="14.0" mnemonicParsing="false" text="By Contact" />
             <RadioButton fx:id="viewPersonalRadioBtn" layoutX="486.0" layoutY="14.0" mnemonicParsing="false" text="My Apts" />
            </HBox>
         </HBox>
-        <TableView fx:id="reportsTable" prefHeight="600.0" prefWidth="800.0">
+        <StackPane>
+        <TableView fx:id="reportsTable" prefHeight="600.0" prefWidth="800.0" visible="false">
             <columns>
                 <TableColumn fx:id="col_apptID" prefWidth="75.0" text="Appt ID" />
                 <TableColumn fx:id="col_title" prefWidth="75.0" text="Title" />
@@ -42,6 +43,14 @@
                 <TableColumn fx:id="col_contactID" prefWidth="75.0" text="Contact ID" />
             </columns>
         </TableView>
+        <TableView fx:id="monthTypeTable" prefHeight="600.0" prefWidth="800.0" visible="true">
+            <columns>
+                <TableColumn fx:id="col_month" prefWidth="300.0" text="Month" />
+                <TableColumn fx:id="col_monthType" prefWidth="300.0" text="Type" />
+                <TableColumn fx:id="col_count" prefWidth="200.0" text="Count" />
+            </columns>
+        </TableView>
+        </StackPane>
     </VBox>
     <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <padding>

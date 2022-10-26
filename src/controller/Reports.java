@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Appointment;
 import model.AppointmentsTable;
 import model.Contact;
+import model.MonthTypeTable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -19,8 +20,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 import static helper.TimeConversion.UTCToLocal;
@@ -45,12 +44,16 @@ public class Reports implements Initializable {
     public TableColumn<Object, Object> col_customerID;
     public TableColumn<Object, Object> col_userID;
     public TableColumn<Object, Object> col_contactID;
-    public RadioButton viewByTypeRadioBtn;
-    public RadioButton viewByMonthRadioBtn;
     public RadioButton viewByContactRadioBtn;
     public RadioButton viewPersonalRadioBtn;
+    public RadioButton viewByMonthTypeRadioBtn;
+    public TableView<MonthTypeTable> monthTypeTable;
+    public TableColumn<Object, Object> col_month;
+    public TableColumn<Object, Object> col_monthType;
+    public TableColumn<Object, Object> col_count;
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
+    ObservableList<model.MonthTypeTable> MonthTypeList = FXCollections.observableArrayList();
 
     /**
      * Initializes controller. Contains 2 lambda expressions at reportViewGroup radio button listener and choiceBox listener.
@@ -61,15 +64,15 @@ public class Reports implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //set initial view
-        setChoiceBoxTypes();
+        viewByMonthTypeRadioBtn.setSelected(true);
+        showChoices(false);
+        setReportsTableViewByMonthType();
 
         //set up radio btn group
         final ToggleGroup reportViewGroup = new ToggleGroup();
-        viewByTypeRadioBtn.setToggleGroup(reportViewGroup);
-        viewByMonthRadioBtn.setToggleGroup(reportViewGroup);
+        viewByMonthTypeRadioBtn.setToggleGroup(reportViewGroup);
         viewByContactRadioBtn.setToggleGroup(reportViewGroup);
         viewPersonalRadioBtn.setToggleGroup(reportViewGroup);
-        viewByTypeRadioBtn.setSelected(true);
 
         //LAMBDA EXPRESSION - set choiceBox based on view selected
         reportViewGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
@@ -77,22 +80,22 @@ public class Reports implements Initializable {
             //determine which radio button is selected
             switch (selected.getId()) {
                 //clear the table, set choicebox/label visibility, then set the choice box
-                case "viewByTypeRadioBtn":
+                case "viewByMonthTypeRadioBtn":
+                    reportsTable.setVisible(false);
+                    monthTypeTable.setVisible(true);
                     reportsTable.getItems().clear();
-                    showChoices(true);
-                    setChoiceBoxTypes();
-                    break;
-                case "viewByMonthRadioBtn":
-                    reportsTable.getItems().clear();
-                    showChoices(true);
-                    setChoiceBoxMonths();
+                    showChoices(false);
+                    setReportsTableViewByMonthType();
                     break;
                 case "viewByContactRadioBtn":
                     reportsTable.getItems().clear();
+                    reportsTable.setVisible(true);
+                    monthTypeTable.setVisible(false);
                     showChoices(true);
-                    setChoiceBoxContacts();
                     break;
                 case "viewPersonalRadioBtn":
+                    reportsTable.setVisible(true);
+                    monthTypeTable.setVisible(false);
                     reportsTable.getItems().clear();
                     showChoices(false);
                     setReportsTableViewPersonal();
@@ -105,23 +108,23 @@ public class Reports implements Initializable {
             //clear out anything in table
             reportsTable.getItems().clear();
 
-            //check which radio button and choicebox is selected
-            RadioButton selected = (RadioButton) reportViewGroup.getSelectedToggle();
+            //check which choicebox is selected
             String selectedItem = choiceBox.getItems().get((Integer) t1);
 
             //set table to that filter
-            switch (selected.getId()) {
-                case "viewByTypeRadioBtn":
-                    setReportsTableViewByType(selectedItem);
-                    break;
-                case "viewByMonthRadioBtn":
-                    setReportsTableViewByMonth(selectedItem);
-                    break;
-                case "viewByContactRadioBtn":
-                    setReportsTableViewByContact(selectedItem);
-                    break;
-            }
+            setReportsTableViewByContact(selectedItem);
         });
+
+        //get all contacts from database
+        ObservableList<String> contacts = FXCollections.observableArrayList();
+        try {
+            contacts = Contact.getAllNames();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        //set choice box
+        choiceBox.setItems(contacts);
     }
 
     /**
@@ -155,139 +158,86 @@ public class Reports implements Initializable {
     }
 
     /**
-     * Set choiceBox to display all appointment types
+     * Sets table to month/type view. Contains Lambda expression at types iterator.
      */
-    private void setChoiceBoxTypes() {
-        //get all distinct apt types
+    private void setReportsTableViewByMonthType() {
+        //get distinct appointment types
         ObservableList<String> types = FXCollections.observableArrayList();
-        try {
+        try{
             types = Appointment.getTypes();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        
-        //set choice box items
-        choiceBox.setItems(types);
-        choiceBoxLabel.setText("Type");
-    }
-
-    /**
-     * Set choiceBox to display all months
-     */
-    private void setChoiceBoxMonths() {
-        ObservableList<String> months = FXCollections.observableArrayList();
-        months.addAll("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-        choiceBox.setItems(months);
-        choiceBoxLabel.setText("Month");
-    }
-
-    /**
-     * Set choiceBox to display all contacts
-     */
-    private void setChoiceBoxContacts() {
-        //get all contacts from database
-        ObservableList<String> contacts = FXCollections.observableArrayList();
-        try {
-            contacts = Contact.getAllNames();
-        } catch (SQLException throwables) {
+        } catch(SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        //set choice box and label
-        choiceBox.setItems(contacts);
-        choiceBoxLabel.setText("Contact Name");
+        //Iterate through months
+        int month = 1;
+        while(month <= 12) {
+            //iterate through each type every month
+            int finalMonth = month;
+            //LAMBDA EXPRESSION - Iterates through each distinct appointment type for every month.
+            types.forEach((type) -> {
+                String sql = "SELECT COUNT(Appointment_ID) FROM appointments WHERE MONTH(Start) = ? AND TYPE=?;";
+                int count = 0;
+                try{
+                    PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                    ps.setInt(1, finalMonth);
+                    ps.setString(2, type);
+                    ResultSet result = ps.executeQuery();
+                    result.next();
+                    count = result.getInt("COUNT(Appointment_ID)");
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                if(count != 0) {
+                    MonthTypeList.add(new MonthTypeTable(
+                            convertMonthToString(finalMonth),
+                            type,
+                            count
+                    ));
+                }
+            });
+            month+=1;
+        }
+        col_month.setCellValueFactory(new PropertyValueFactory<>("month"));
+        col_monthType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        col_count.setCellValueFactory(new PropertyValueFactory<>("count"));
+        monthTypeTable.setItems(MonthTypeList);
     }
 
     /**
-     * Set the reports table to View appointments by type
+     * Converts integer month to string
      *
-     * @param selectedType Type of appointment selected.
+     * @param month Integer month
+     * @return String month
      */
-    private void setReportsTableViewByType(String selectedType) {
-        //get data from database
-        String sql = "SELECT * FROM appointments WHERE Type = ?;";
-        try {
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ps.setString(1, selectedType);
-            ResultSet result =  ps.executeQuery();
-            addToObList(result);
-        } catch (SQLException | ParseException throwables) {
-            throwables.printStackTrace();
-        }
-
-        //set table
-        setCellValueFactories();
-        reportsTable.setItems(oblist);
-    }
-
-    /**
-     * Set the reports table to view appointments by month.
-     *
-     * @param month Month selected.
-     */
-    private void setReportsTableViewByMonth(String month) {
-        //convert Month to integer
-        int selectedMonth = 0;
+    private String convertMonthToString(int month) {
         switch (month) {
-            case "January":
-                selectedMonth = 1;
-                break;
-            case "February":
-                selectedMonth = 2;
-                break;
-            case "March":
-                selectedMonth = 3;
-                break;
-            case "April":
-                selectedMonth = 4;
-                break;
-            case "May":
-                selectedMonth = 5;
-                break;
-            case "June":
-                selectedMonth = 6;
-                break;
-            case "July":
-                selectedMonth = 7;
-                break;
-            case "August":
-                selectedMonth = 8;
-                break;
-            case "September":
-                selectedMonth = 9;
-                break;
-            case "October":
-                selectedMonth = 10;
-                break;
-            case "November":
-                selectedMonth = 11;
-                break;
-            case "December":
-                selectedMonth = 12;
-                break;
+            case 1:
+                return "January";
+            case 2:
+                return "February";
+            case 3:
+                return "March";
+            case 4:
+                return "April";
+            case 5:
+                return "May";
+            case 6:
+                return "June";
+            case 7:
+                return "July";
+            case 8:
+                return "August";
+            case 9:
+                return "September";
+            case 10:
+                return "October";
+            case 11:
+                return "November";
+            case 12:
+                return "December";
         }
-
-        //get current year
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        int currentYear = calendar.get(Calendar.YEAR);
-
-        //get data from database
-        String sql = "SELECT * FROM appointments WHERE MONTH(Start) = ? AND YEAR(START) = ?;";
-        try {
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ps.setInt(1, selectedMonth);
-            ps.setInt(2, currentYear);
-            ResultSet result =  ps.executeQuery();
-            addToObList(result);
-        } catch (SQLException | ParseException throwables) {
-            throwables.printStackTrace();
-        }
-
-        //set table with database data
-        setCellValueFactories();
-        reportsTable.setItems(oblist);
+        return null;
     }
 
     /**
