@@ -124,6 +124,7 @@ public class Appointments implements Initializable {
         //get selected apt
         AppointmentsTable selectedApt = appointmentsTable.getSelectionModel().getSelectedItem();
         Integer aptID = selectedApt.getAptID();
+        String aptType = selectedApt.getType();
 
         //pass apt to delete function
         Appointment.delete(aptID);
@@ -131,6 +132,13 @@ public class Appointments implements Initializable {
         //refresh table and buttons
         setAptTableAll();
         disableButtons();
+
+        //display confirmation
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Appointment Deleted");
+        alert.setHeaderText("Appointment Successfully Deleted");
+        alert.setContentText("ID: " + aptID + "\nType: " + aptType);
+        alert.showAndWait();
     }
 
     /**

@@ -23,10 +23,12 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         //get locale and language
+//        Locale.setDefault(new Locale("fr"));
         Locale locale = Locale.getDefault();
         String language = locale.getLanguage();
         String stageTitle;
         ResourceBundle rb = ResourceBundle.getBundle("Nat", locale);
+
 
         //set stage title based on local language
         if (language.equals("fr")) {
