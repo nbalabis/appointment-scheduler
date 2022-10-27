@@ -134,7 +134,7 @@ public class Appointments implements Initializable {
         disableButtons();
 
         //display confirmation
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Appointment Deleted");
         alert.setHeaderText("Appointment Successfully Deleted");
         alert.setContentText("ID: " + aptID + "\nType: " + aptType);
