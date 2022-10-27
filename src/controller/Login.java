@@ -73,7 +73,7 @@ public class Login implements Initializable {
         boolean successfulLogin = isValidUser(userNameInput, passwordInput, language, rb);
 
         //log login activity
-        logger.info("Login successful: " + successfulLogin);
+        logger.info("Username: " + userNameInput + "\nLogin successful: " + successfulLogin);
 
         //switch scenes and display upcoming apts
         if(successfulLogin) {
