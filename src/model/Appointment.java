@@ -211,6 +211,23 @@ public class Appointment {
     }
 
     /**
+     * Gets all distinct appointment locations from database.
+     *
+     * @return An observableList of locations.
+     * @throws SQLException Throws SQLException.
+     */
+    public static ObservableList<String> getLocations() throws SQLException {
+        String sql = "SELECT DISTINCT Location FROM appointments;";
+        ObservableList<String> locations = FXCollections.observableArrayList();
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet result = ps.executeQuery();
+        while(result.next()) {
+            locations.add(result.getString("Location"));
+        }
+        return locations;
+    }
+
+    /**
      * Gets all appointments in database.
      *
      * @return A ResultSet containing all appointments in the database.

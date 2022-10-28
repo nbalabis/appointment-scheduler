@@ -8,10 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import model.Appointment;
-import model.AppointmentsTable;
-import model.Contact;
-import model.MonthTypeTable;
+import model.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.ResourceBundle;
 
 import static helper.TimeConversion.UTCToLocal;
-import static main.Main.CURRENT_USER_ID;
 
 /**
  * Controller for Reports page.
@@ -45,15 +41,19 @@ public class Reports implements Initializable {
     public TableColumn<Object, Object> col_userID;
     public TableColumn<Object, Object> col_contactID;
     public RadioButton viewByContactRadioBtn;
-    public RadioButton viewPersonalRadioBtn;
+    public RadioButton viewByLocationRadioBtn;
     public RadioButton viewByMonthTypeRadioBtn;
     public TableView<MonthTypeTable> monthTypeTable;
     public TableColumn<Object, Object> col_month;
     public TableColumn<Object, Object> col_monthType;
     public TableColumn<Object, Object> col_count;
+    public TableView<LocationTable> locationTable;
+    public TableColumn<Object, Object> col_uniqueLocation;
+    public TableColumn<Object, Object> col_locationCount;
 
     ObservableList<model.AppointmentsTable> oblist = FXCollections.observableArrayList();
     ObservableList<model.MonthTypeTable> MonthTypeList = FXCollections.observableArrayList();
+    ObservableList<model.LocationTable> LocationList = FXCollections.observableArrayList();
 
     /**
      * Initializes controller. Contains 2 lambda expressions at reportViewGroup radio button listener and choiceBox listener.
@@ -72,7 +72,7 @@ public class Reports implements Initializable {
         final ToggleGroup reportViewGroup = new ToggleGroup();
         viewByMonthTypeRadioBtn.setToggleGroup(reportViewGroup);
         viewByContactRadioBtn.setToggleGroup(reportViewGroup);
-        viewPersonalRadioBtn.setToggleGroup(reportViewGroup);
+        viewByLocationRadioBtn.setToggleGroup(reportViewGroup);
 
         //LAMBDA EXPRESSION - set choiceBox based on view selected
         reportViewGroup.selectedToggleProperty().addListener((observableValue, toggle, t1) -> {
@@ -82,23 +82,26 @@ public class Reports implements Initializable {
                 //clear the table, set choicebox/label visibility, then set the choice box
                 case "viewByMonthTypeRadioBtn":
                     reportsTable.setVisible(false);
+                    locationTable.setVisible(false);
                     monthTypeTable.setVisible(true);
-                    reportsTable.getItems().clear();
+                    monthTypeTable.getItems().clear();
                     showChoices(false);
                     setReportsTableViewByMonthType();
                     break;
                 case "viewByContactRadioBtn":
-                    reportsTable.getItems().clear();
                     reportsTable.setVisible(true);
                     monthTypeTable.setVisible(false);
+                    locationTable.setVisible(false);
+                    reportsTable.getItems().clear();
                     showChoices(true);
                     break;
-                case "viewPersonalRadioBtn":
-                    reportsTable.setVisible(true);
+                case "viewByLocationRadioBtn":
+                    reportsTable.setVisible(false);
                     monthTypeTable.setVisible(false);
-                    reportsTable.getItems().clear();
+                    locationTable.setVisible(true);
+                    locationTable.getItems().clear();
                     showChoices(false);
-                    setReportsTableViewPersonal();
+                    setLocationTable();
                     break;
             }
         });
@@ -265,21 +268,40 @@ public class Reports implements Initializable {
     /**
      * Set the reports table to view current user's appointments.
      */
-    private void setReportsTableViewPersonal() {
-        //get data from database
-        String sql = "SELECT * FROM appointments WHERE User_ID = ?;";
-        try {
-            PreparedStatement ps = JDBC.connection.prepareStatement(sql);
-            ps.setInt(1, CURRENT_USER_ID);
-            ResultSet result  = ps.executeQuery();
-            addToObList(result);
-        } catch (SQLException | ParseException throwables) {
+    private void setLocationTable() {
+        //get distinct locations
+        ObservableList<String> locations = FXCollections.observableArrayList();
+        try{
+            locations = Appointment.getLocations();
+        } catch(SQLException throwables) {
             throwables.printStackTrace();
         }
 
-        //fill table with results
-        setCellValueFactories();
-        reportsTable.setItems(oblist);
+        //LAMBDA EXPRESSION - Iterates through each distinct appointment location.
+        locations.forEach((location) -> {
+            //count the number of appointments with each location
+            String sql = "SELECT COUNT(Appointment_ID) FROM appointments WHERE Location = ?;";
+            int count = 0;
+            try{
+                PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+                ps.setString(1, location);
+                ResultSet result = ps.executeQuery();
+                result.next();
+                count = result.getInt("COUNT(Appointment_ID)");
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+            if(count != 0) {
+                LocationList.add(new LocationTable(
+                        location,
+                        count
+                ));
+            }
+        });
+
+        col_uniqueLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
+        col_locationCount.setCellValueFactory(new PropertyValueFactory<>("count"));
+        locationTable.setItems(LocationList);
     }
 
     /**

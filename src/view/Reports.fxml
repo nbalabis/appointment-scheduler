@@ -25,7 +25,7 @@
                <Label text="View Appointment Report:" />
                <RadioButton fx:id="viewByMonthTypeRadioBtn" mnemonicParsing="false" text="By Month/Type" />
             <RadioButton fx:id="viewByContactRadioBtn" layoutX="452.0" layoutY="14.0" mnemonicParsing="false" text="By Contact" />
-            <RadioButton fx:id="viewPersonalRadioBtn" layoutX="486.0" layoutY="14.0" mnemonicParsing="false" text="My Apts" />
+            <RadioButton fx:id="viewByLocationRadioBtn" layoutX="486.0" layoutY="14.0" mnemonicParsing="false" text="By Location" />
            </HBox>
         </HBox>
         <StackPane>
@@ -48,6 +48,12 @@
                 <TableColumn fx:id="col_month" prefWidth="300.0" text="Month" />
                 <TableColumn fx:id="col_monthType" prefWidth="300.0" text="Type" />
                 <TableColumn fx:id="col_count" prefWidth="200.0" text="Count" />
+            </columns>
+        </TableView>
+        <TableView fx:id="locationTable" prefHeight="600.0" prefWidth="800.0" visible="false">
+            <columns>
+                <TableColumn fx:id="col_uniqueLocation" prefWidth="400.0" text="Location" />
+                <TableColumn fx:id="col_locationCount" prefWidth="400.0" text="Count" />
             </columns>
         </TableView>
         </StackPane>
