@@ -22,7 +22,7 @@ To run the program:
     3 - Use the 'javac' command to compile code
     4 - Run the compiled code with the 'java' command
 
-Additional Report - I have included an additional report titled, "My Apts." This report displays all appointments corresponding to the currently logged in user.
-    This report would be useful for a user that would like to review their currently assigned workload or any upcoming appointments past the automated 15 minute alert window.
+Additional Report - I have included an additional report titled, "By Location" This report displays a count of the number of appointments scheduled for each location.
+    This report would be useful reviewing which locations might be backed up or under/over-performing.
 
 MySQL Connector driver version: mysql-connector-java-8.0.22
