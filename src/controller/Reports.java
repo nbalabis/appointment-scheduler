@@ -266,7 +266,7 @@ public class Reports implements Initializable {
     }
 
     /**
-     * Set the reports table to view current user's appointments.
+     * Set the reports table to view count of appointments in distinct locations. Contains 1 lambda expression at location iterator.
      */
     private void setLocationTable() {
         //get distinct locations
