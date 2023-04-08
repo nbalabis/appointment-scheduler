@@ -140,7 +140,7 @@ Built as a submission to complete WGU's Software II course.
 [contributors-url]: https://github.com/nbalabis/appointment-scheduler/graphs/contributors
 [lastcommit-shield]: https://img.shields.io/github/last-commit/nbalabis/appointment-scheduler.svg?style=for-the-badge
 [license-shield]: https://img.shields.io/github/license/nbalabis/appointment-scheduler.svg?style=for-the-badge
-[license-url]: https://github.com/nbalabis/appointment-scheduler/blob/main/license
+[license-url]: https://github.com/nbalabis/appointment-scheduler/blob/master/LICENSE
 [java.js]: https://img.shields.io/badge/Java-3a75b0?style=for-the-badge
 [java-url]: https://www.java.com/en/
 [javafx.js]: https://img.shields.io/badge/JavaFX-e76f00?style=for-the-badge
